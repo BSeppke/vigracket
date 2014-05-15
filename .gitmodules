@@ -1,0 +1,3 @@
+[submodule "vigra_c"]
+	path = vigra_c
+	url = https://github.com/bseppke/vigra_c
