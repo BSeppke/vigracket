@@ -25,38 +25,34 @@
                        (real->decimal-string (image-ref image x y 2) 4)
                        " ]"))))
 
-;; Defines a class on the fly that overrides the  callback for
+;; Defines a class on the fly that overrides the callback for
 ;; mouse events in a canvas; you could name it,  if needed
-(define image-message%
-  (class message%
-    (init-field image 
-                [status-object #f]) 
-    (super-new [label (image->bitmap image)])
-    (inherit set-label)
-    (define (set-image img) 
-      (set! image img)
-      (set-label (image->bitmap image)))
-    (define (set-status-object stat) 
-      (set! status-object stat))
-    (set-label (image->bitmap image))
-    (define/override (on-subwindow-event sw e)
-      (when (not (boolean? status-object))
+(define image-canvas%
+  (class canvas%
+    (init-field image [racket_img #f]) 
+    (define/override (on-paint)
+      (begin
+          (when (boolean? racket_img)
+            (set! racket_img (image->racket-image image)))
+          (send (send this get-dc) draw-bitmap racket_img 0 0)))
+    (define/override (on-event e) 
         (begin
-          (define kind (send e moving?))
-          (define x (send e get-x))
-          (define y (send e get-y))
-          (define width  (image-width image))
-          (define height (image-height image))
-          (when kind
-            (if (and (< -1 x width)
-                     (< -1 y height))
-              ;;show pixel position and value
-                (send status-object set-status-text (string-append "Value at pixel (" (number->string x)  ","  (number->string y)   ") is : "
-                                                        (image-value->string image x y)))
-              ;;errorcase
-                (send status-object set-status-text (string-append "Value at pixel ("  (number->string x)  "," (number->string y) ") is not defined!")))))))
-    )
-)
+          (when (send e moving?)
+            (let-values (((off_x off_y) (send this get-view-start)))
+              (let* ((parent (send this get-parent))
+                     (x (+ (send e get-x) off_x))
+                     (y (+ (send e get-y) off_y))
+                     (width  (image-width image))
+                     (height (image-height image)))
+                (if (and (< -1 x width)
+                         (< -1 y height))
+                    ;;show pixel position and value
+                    (send parent set-status-text (string-append "Value at pixel (" (number->string x)  ","  (number->string y)   ") is : "
+                                                              (image-value->string image x y)))
+                    ;;errorcase
+                    (send parent set-status-text (string-append "Value at pixel ("  (number->string x)  "," (number->string y) ") is not defined!"))))))))
+    (super-new [style '(vscroll hscroll resize-corner)])
+    (send this init-auto-scrollbars (image-width image) (image-height image) 0.0 0.0)))
   
 
 ;;Creates a frame, places a canvas inside it  and draws the given pixelarray
@@ -66,10 +62,13 @@
 (define (show-image image . windowtitle)
   ;; Make a  frame
   (define frame
-    (new frame% [label (if (pair? windowtitle) (car  windowtitle) "vigracket Image Viewer")]))
+    (new frame% 
+         [label  (if (pair? windowtitle) (car  windowtitle) "vigracket Image Viewer")]
+         [width  (+ (image-width image) 20)]
+         [height (+ (image-height image) 60)]))
   ;; Make the drawing area
-  (define img-message
-    (new image-message% [image image] [parent frame] [status-object frame]))
+  (define canvas
+    (new image-canvas% [image image] [parent frame]))
   ;;enable a status line
   (send frame create-status-line)
   ;; Show the frame
@@ -81,4 +80,4 @@
 (provide show-image
          image-show 
          showimage
-         image-message%)
+         image-canvas%)

@@ -251,7 +251,7 @@
            showimage
            show-image
            image-show
-           image-message%
+           image-canvas%
            
            ;vigracket.convert
            image->bitmap
