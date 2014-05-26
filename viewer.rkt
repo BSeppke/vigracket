@@ -51,8 +51,7 @@
                                                               (image-value->string image x y)))
                     ;;errorcase
                     (send parent set-status-text (string-append "Value at pixel ("  (number->string x)  "," (number->string y) ") is not defined!"))))))))
-    (super-new [style '(vscroll hscroll resize-corner)])
-    (send this init-auto-scrollbars (image-width image) (image-height image) 0.0 0.0)))
+    (super-new [style '(vscroll hscroll resize-corner)])))
   
 
 ;;Creates a frame, places a canvas inside it  and draws the given pixelarray
@@ -63,13 +62,17 @@
   ;; Make a  frame
   (define frame
     (new frame% 
-         [label  (if (pair? windowtitle) (car  windowtitle) "vigracket Image Viewer")]
-         [width  (+ (image-width image) 20)]
-         [height (+ (image-height image) 60)]))
+         [label  (if (pair? windowtitle) (car  windowtitle) "vigracket Image Viewer")]))
   ;; Make the drawing area
   (define canvas
     (new image-canvas% [image image] [parent frame]))
-  ;;enable a status line
+  ;; Adjust it
+  (send canvas min-client-width (image-width image))
+  (send canvas min-client-height (image-height image))
+  (send canvas horiz-margin 0)
+  (send canvas vert-margin 0)
+  (send canvas init-auto-scrollbars (image-width image) (image-height image) 0.0 0.0)
+  ;; Enable a status line
   (send frame create-status-line)
   ;; Show the frame
   (send frame show #t))
