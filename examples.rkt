@@ -78,22 +78,6 @@
 (define  img12 (sharpening img 3.0))
 (define  img13 (nonlineardiffusion img 0.1 2.0))
 
-(display "saving resulting images")(newline)
-(saveimage img2   (build-path save-path "images/blox-relabeled-watersheds-on-resized-gradient-image.png"))
-
-(saveimage img3magnitude (build-path save-path "images/rect-fft-magnitude.png"))
-(saveimage (image-map sqrt img3magnitude) (build-path save-path "images/rect-fft-sqrt-magnitude.png"))
-
-(saveimage img4   (build-path save-path "images/blox-reflected-both.png"))
-(saveimage img5   (build-path save-path "images/blox-rotated-15deg.png"))
-(saveimage img6   (build-path save-path "images/blox-aff-rotated-15deg.png"))
-(saveimage img7   (build-path save-path "images/blox-disttransform-on-canny.png"))
-(saveimage img8   (build-path save-path "images/blox-diff_of_exp.png"))
-(saveimage img9   (build-path save-path "images/blox-gsmooth-3.0.png"))
-(saveimage img10  (build-path save-path "images/blox-log-3.0.png"))
-(saveimage img11  (build-path save-path "images/blox-gsharpening-0.5-3.0.png"))
-(saveimage img12  (build-path save-path "images/blox-sharpening-3.0.png"))
-(saveimage img13  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
 
 (show-image img5)
 (show-image img6 "title: img6")
@@ -144,3 +128,70 @@
                                     (list->matrix '((0.3333) (0.3333) (0.3333))) 
                                     (list->matrix '((0.1 0.1 0.1 0.1 0.1 0.0 0.1 0.1 0.1 0.1 0.1))) )
             "Box mean separable convolution")
+
+;Testing the vigra w.r.t. Schnoerr's coherence enhancing shock filter
+(define (shock-image image sigma rho h iterations)
+  (if (= iterations 0)
+      image
+      (let* ((img_st  (structuretensor image sigma rho))
+             (img_st_te (tensoreigenrepresentation img_st))
+             (img_hm  (hessianmatrixofgaussian image sigma))
+             (img_ev_x (image-map (lambda (ang) (cos ang)) (third img_st_te)))
+             (img_ev_y (image-map (lambda (ang) (sin ang)) (third img_st_te)))
+             (img_signum (image-map (lambda (c s v_xx v_xy v_yy)
+                                 (+ (* c c v_xx) (* 2 c s v_xy) (* s s v_yy)))
+                                    img_ev_x
+                                    img_ev_y
+                                    (first img_hm)
+                                    (second img_hm)
+                                    (third img_hm))))
+        (shock-image (upwindimage image img_signum h) sigma rho h (- iterations 1)))))
+
+
+(define up_img5 (shock-image img1 2.0 6.0 0.3 5))
+(show-image up_img5  "upwind img 5")
+
+
+;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
+(define (meanColorImage segmentation image)
+  (let* ((region_count (inexact->exact	(+ (car (image-reduce max segmentation 0))  1)))
+         (region_sizes  (make-vector region_count))
+         (region_colors (make-vector region_count (make-list (image-numbands image) 0.0)))
+         (new_image (copy-image image))
+         (foo (image-for-each-pixel 
+               (lambda (x y p)
+                 (let ((region_id    (inexact->exact (image-ref segmentation x y 0))))         
+                   (begin
+                     (vector-set! region_sizes region_id  (+ (vector-ref region_sizes region_id) 1))
+                     (vector-set! region_colors region_id  (map + p (vector-ref region_colors region_id))))))
+               image))
+         (normalized_colors (vector-map (lambda (color_list size)
+                                               (map (lambda (color) (exact->inexact (/ color (max 1 size))))
+                                                    color_list))
+                                 region_colors
+                                 region_sizes)))
+         (image-for-each-pixel 
+               (lambda (x y p)
+                 (let ((region_id (inexact->exact (image-ref segmentation x y 0))))
+                   (image-set! new_image x y (vector-ref normalized_colors region_id))))
+                 new_image)))
+
+(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1) 0.0) "img1-regions")
+;(define test (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1))
+
+(display "saving resulting images")(newline)
+(saveimage img2   (build-path save-path "images/blox-relabeled-watersheds-on-resized-gradient-image.png"))
+
+(saveimage img3magnitude (build-path save-path "images/rect-fft-magnitude.png"))
+(saveimage (image-map sqrt img3magnitude) (build-path save-path "images/rect-fft-sqrt-magnitude.png"))
+
+(saveimage img4   (build-path save-path "images/blox-reflected-both.png"))
+(saveimage img5   (build-path save-path "images/blox-rotated-15deg.png"))
+(saveimage img6   (build-path save-path "images/blox-aff-rotated-15deg.png"))
+(saveimage img7   (build-path save-path "images/blox-disttransform-on-canny.png"))
+(saveimage img8   (build-path save-path "images/blox-diff_of_exp.png"))
+(saveimage img9   (build-path save-path "images/blox-gsmooth-3.0.png"))
+(saveimage img10  (build-path save-path "images/blox-log-3.0.png"))
+(saveimage img11  (build-path save-path "images/blox-gsharpening-0.5-3.0.png"))
+(saveimage img12  (build-path save-path "images/blox-sharpening-3.0.png"))
+(saveimage img13  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
