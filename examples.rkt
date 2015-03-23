@@ -148,7 +148,9 @@
         (shock-image (upwindimage image img_signum h) sigma rho h (- iterations 1)))))
 
 
-(define up_img5 (shock-image img1 2.0 6.0 0.3 5))
+(define up_img1 (shock-image img1 2.0 6.0 0.3 1))
+(define up_img5 (shock-image up_img1 2.0 6.0 0.3 4))
+(define up_img10 (shock-image up_img5 2.0 6.0 0.3 5))
 (show-image up_img5  "upwind img 5")
 
 
@@ -195,3 +197,7 @@
 (saveimage img11  (build-path save-path "images/blox-gsharpening-0.5-3.0.png"))
 (saveimage img12  (build-path save-path "images/blox-sharpening-3.0.png"))
 (saveimage img13  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
+
+(saveimage up_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
+(saveimage up_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))
+(saveimage up_img10 (build-path save-path "images/lenna-shock-s2-r6-t03-i10.png"))

@@ -12,12 +12,12 @@
 
 ;; 2. If vigracket-collects dir extist, delete it.
 (when (directory-exists? local-install-path)
-  (delete-directory local-install-path))
+  (delete-directory/files local-install-path))
 
 ;; 3. copy the installation contents to the local/collects/vigracket directory
 (copy-directory/files (current-directory) local-install-path)
 
-;; Load dll under windows, dylib under MacOS
+;; 4. Load dll under windows, dylib under MacOS
 (define dylib-file
     (cond ((equal? (system-type 'os) 'windows) "vigra_c.dll")
           ((equal? (system-type 'os) 'macosx)  "libvigra_c.dylib")
@@ -25,11 +25,11 @@
           (else (error "Only macosx, windows and unix are supported"))))
 (define dylib-path (build-path local-install-path dylib-file))
 
-;; For Windows: Add the dll directory to the systems path:
+;; 5. For Windows: Add the dll directory to the systems path:
 (when (equal? (system-type 'os) 'windows)
     (putenv "PATH" (string-append (path->string local-install-path) ";" (getenv "PATH"))))
 
-;; Stuff needed to compile the c-bindings if necessary...
+;; 6. Stuff needed to compile the c-bindings if necessary...
 (define base_login_script "~/.profile")
 (define vigra_c-path (build-path local-install-path "vigra_c"))
 
@@ -44,11 +44,11 @@
   (display "Searching for vigra using 'vigra-config --version': ")
   (system-env "vigra-config --version"))
 
-;; For windows, we need to find out, which architecture DrRacket is built
+;; 7. For windows, we need to find out, which architecture DrRacket is built
 (require (only-in ffi/unsafe ctype-sizeof _pointer))
 (define racket-bits (* 8 (ctype-sizeof _pointer)))
 
-; The compilation routine (at least for macosx and unix)
+; 8. The compilation routine (at least for macosx and unix)
 (if (or (equal? (system-type 'os) 'macosx)
         (equal? (system-type 'os) 'unix))
     (if (vigra-installed?)
@@ -63,7 +63,7 @@
                 #t)
               (error "making the vigra_c lib failed, although vigra seems to be installed")))
         (error "Vigra is not found. Please check if the prefix path is set correctly in ~/.profile environment file!"))
-    ;;For windows
+    ;;For windows: Just copy the correct binaries
     (if (equal? (system-type 'os) 'windows)
         (let ((bindir     (build-path vigra_c-path "bin" (string-append "win"(number->string racket-bits)))))
           (begin
