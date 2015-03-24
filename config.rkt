@@ -2,7 +2,7 @@
 
 ;; Module constants
 (define vigracket-path  (collection-path "vigracket"))
-(define vigracket-version "1.0.0")
+(define vigracket-version "1.1.0")
 
 ;; Load dll under windows, dylib under MacOS
 (define vigracket-dylib-file
