@@ -7,22 +7,26 @@
 (require racket/list)
 (unsafe!)
 
-;;Helper for cvectors: make a cvector with an inital value
+;;Helper for cvecs: make a cvector with an inital value
 (define (make-cvector-init type length val)
   (let ((cvec (make-cvector type length)))
     (do ((i 0 (+ i 1)))
       ((= i length) cvec)
       (cvector-set! cvec i val))))
 
-;;Helper for cvectors: copying a cvector
+(define (compatible-cvecs? cvecs)
+  (if (<= (length cvecs) 1)
+      #t
+      (let ((lengths (map cvector-length cvecs)))
+        (andmap (curry = (car lengths)) (cdr lengths)))))
+
+;;Helper for cvecs: copying a cvector
 
 (define (fast-cvector-copy-name cvec)
-  (case (cvector-type cvec)
-    ((_uint8)  'vigra_copy_uint8_array)
-    ((_int)    'vigra_copy_int_array)
-    ((_float)  'vigra_copy_float_array)
-    ((_double) 'vigra_copy_double_array)
-    (else      #f)))
+  (let ((layout (ctype->layout (cvector-type cvec))))
+    (if (member layout '(uint8 int float double))
+        (string->symbol (string-append "vigra_copy_" (symbol->string layout) "_array_c"))
+        #f)))
 
 
 (define (copy-cvector cvec)
@@ -31,15 +35,63 @@
         ;;no fast copying found - take the slow one...
         (list->cvector (cvector->list cvec) (cvector-type cvec))
         ;;fast variant
-        ((get-ffi-obj copy_name vigracket-dylib-path
-               (_fun (src dest size) :: [src : _cvector]
-                     [dest : _cvector]
-                     [size : _int]
-                     -> (res :  _int))) cvec))))
+        (let* ((fast_func  (get-ffi-obj copy_name vigracket-dylib-path
+                                       (_fun (src dest size) :: [src : _cvector]
+                                             [dest : _cvector]
+                                             [size : _int]
+                                             -> (res :  _int))))
+               (result (make-cvector (cvector-type cvec) (cvector-length cvec))))
+          (case  (fast_func cvec result (cvector-length cvec))
+            ((0) result)
+            (else (error (string-append "copy-cvector: something went wrong while copying a cvector of size: "
+                                        (number->string (cvector-length cvec))
+                                        ". the used function for copying was: "  (symbol->string fast-cvector-copy-name)))))
+        ))))
 
+; map! a function over cvectors...
+(define (cvector-map! func . cvecs)
+  (if (null? cvecs)
+      '()
+      (if (compatible-cvecs? cvecs)
+          (let* ((result  (car cvecs))
+                 (length (cvector-length  result)))
+            (do ((i 0 (+ i 1)))
+              ((= i length) result)
+              (cvector-set! result i (apply func (map (curryr cvector-ref i) cvecs)))))
+          (error "cvector-map!: sizes do not match!"))))
+
+; map a function over cvectors...
+(define (cvector-map func . cvecs)
+  (if (null? cvecs)
+      '()
+      (if (compatible-cvecs? cvecs)
+          (let* ((result (copy-cvector (car cvecs)))
+                 (length (cvector-length result)))
+            (do ((i 0 (+ i 1)))
+              ((= i length) result)
+              (cvector-set! result i (apply func (map (curryr cvector-ref i) cvecs)))))
+          (error "cvector-map: sizes do not match!"))))
+
+; foldl function over one vector...
+(define (cvector-foldl func cvec seed)
+  (let* ((length (cvector-length cvec))
+         (reduce_var seed))
+    (do ((i 0 (+ i 1)))
+      ((= i length) reduce_var)
+      (set! reduce_var  (func (cvector-ref cvec i) reduce_var)))))
+
+; foldr function over one vector...
+(define (cvector-foldr func cvec seed)
+  (let* ((length (cvector-length cvec))
+         (reduce_var seed))
+    (do ((i 0 (+ i 1)))
+      ((= i length) reduce_var)
+      (set! reduce_var  (func reduce_var (cvector-ref cvec i))))))
+
+(define cvector-reduce cvector-foldr)
 
 ;; Define carray-base as base structure for a multidimensional
-;; Array that is based on cvectors
+;; Array that is based on cvecs
 ;; Note that the name is carray-base as we want to write our
 ;; own constructor make-carray and other functions!
 (define-struct carray-base 
@@ -85,7 +137,7 @@
 
 ;; Accessor for the item stored at a given position (as list)
 (define (carray-ref arr pos)
-  (cvector-ref (carray-data arr) (carray-index pos(carray-dimensions arr))))
+  (cvector-ref (carray-data arr) (carray-index pos (carray-dimensions arr))))
 
 ;; Setting the item stored at a given position (as list) to a given value
 (define (carray-set! arr pos val)
@@ -94,6 +146,25 @@
 ;; copy a carray
 (define (copy-carray arr)
   (make-carray-base (copy-cvector (carray-data arr)) (carray-dimensions arr)))
+
+;; map! a carray
+(define (carray-map! func . carrays)
+  (make-carray-base (apply (curry cvector-map! func) (map carray-data carrays)) (carray-dimensions (car carrays))))
+
+;; map a carray
+(define (carray-map func . carrays)
+  (make-carray-base (apply (curry cvector-map func) (map carray-data carrays)) (carray-dimensions (car carrays))))
+
+;; foldl a carray
+(define (carray-foldl func arr seed)
+  (cvector-foldl func (carray-data arr) seed))
+
+;; reduce/foldr a carray
+(define (carray-foldr func arr seed)
+  (cvector-foldr func (carray-data arr) seed))
+
+;; reduce a carray
+(define carray-reduce carray-foldr)
 
 ;list->carray helpers: extract the dimension of a hierarchical array
 (define (list->carray-dimensions xs)

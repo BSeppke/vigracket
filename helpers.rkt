@@ -88,45 +88,18 @@
 
 
 ; map a function (lambda (pixel_intensity 1 .. 2 .. 3 .. n) -> a_new_intensity)
-(define (band-map func . bands)
-  (if (null? bands)
-      '()
-      (let* ((my_band (copy-band (car bands)))
-             (width (band-width my_band))
-             (height (band-height my_band))
-             (band_vec (band-data my_band))
-             (map_func (lambda(band i) 
-                         (cvector-ref (band-data band) i))))
-    (do ((i 0 (+ i 1)))
-      ((= i (* width height)) my_band)
-      (cvector-set! band_vec i  (apply func (map (lambda(band) (map_func band i)) bands)))))))
+(define band-map carray-map)
   
 
 ; same as above but in-place!
 ; Changes the first given band in the list!
-(define (band-map! func . bands)
-  (if (null? bands)
-      '()
-      (let* ((my_band  (car bands))
-             (width (band-width my_band))
-             (height (band-height my_band))
-             (band_vec (band-data my_band))
-             (map_func (lambda(band i) 
-                         (cvector-ref (band-data band) i))))
-    (do ((i 0 (+ i 1)))
-      ((= i (* width height)) my_band)
-      (cvector-set! band_vec i  (apply func (map (lambda(band) (map_func band i)) bands)))))))
+(define band-map! carray-map!)
 
   
 ; reduce for bands
-(define (band-reduce func band seed)
-  (let* ((width (band-width band))
-         (height (band-height band))
-         (band_vec (band-data band))
-         (reduce_var seed))
-    (do ((i 0 (+ i 1)))
-      ((= i (* width height)) reduce_var)
-      (set! reduce_var  (func reduce_var (cvector-ref band_vec i))))))
+(define band-foldl carray-foldl)
+(define band-foldr carray-foldr)
+(define band-reduce carray-reduce)
   
 ; apply a function (lambda (x y) -> void)
 ; to an band in-place!
