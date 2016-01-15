@@ -12,12 +12,11 @@
 (make-directory* (build-path save-path "images"))
 
 (display "loading blox-image")(newline)
- (define img (loadimage  (build-path vigracket-path "images/blox.gif")))
+(define img (loadimage  (build-path vigracket-path "images/blox.gif")))
 
 (display "performance test gaussian smoothing")(newline)
 (display "vigra-method [in ms]:")(newline)
 (time (gsmooth img 0.3))
-
 
 (display "performing watershed transform on resized gradient image")(newline)
  (define  img2 (regionimagetocrackedgeimage
@@ -133,24 +132,22 @@
 (define (shock-image image sigma rho h iterations)
   (if (= iterations 0)
       image
-      (let* ((img_st  (structuretensor image sigma rho))
-             (img_st_te (tensoreigenrepresentation img_st))
+      (let* ((img_st_te (tensoreigenrepresentation (structuretensor image sigma rho)))
              (img_hm  (hessianmatrixofgaussian image sigma))
-             (img_ev_x (image-map (lambda (ang) (cos ang)) (third img_st_te)))
-             (img_ev_y (image-map (lambda (ang) (sin ang)) (third img_st_te)))
-             (img_signum (image-map (lambda (c s v_xx v_xy v_yy)
-                                 (+ (* c c v_xx) (* 2 c s v_xy) (* s s v_yy)))
-                                    img_ev_x
-                                    img_ev_y
+             (img_signum (image-map (lambda (e v_xx v_xy v_yy)
+                                      (let ((c (cos e))
+                                            (s (sin e)))                                              
+                                        (+ (* c c v_xx)
+                                           (* 2 c s v_xy)
+                                           (* s s v_yy))))
+                                    (third img_st_te)
                                     (first img_hm)
                                     (second img_hm)
                                     (third img_hm))))
         (shock-image (upwindimage image img_signum h) sigma rho h (- iterations 1)))))
 
-
-(define up_img1 (shock-image img1 2.0 6.0 0.3 1))
+(define up_img1 (shock-image img1    2.0 6.0 0.3 1))
 (define up_img5 (shock-image up_img1 2.0 6.0 0.3 4))
-(define up_img10 (shock-image up_img5 2.0 6.0 0.3 5))
 (show-image up_img5  "upwind img 5")
 
 
@@ -200,4 +197,3 @@
 
 (saveimage up_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
 (saveimage up_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))
-(saveimage up_img10 (build-path save-path "images/lenna-shock-s2-r6-t03-i10.png"))
