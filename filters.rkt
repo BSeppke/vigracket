@@ -77,7 +77,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sigma : _float]
+                     [sigma : _float*]
                      -> (res :  _int))))
 
 (define (gsmooth-band band sigma)
@@ -103,7 +103,7 @@
                      [img_vector3 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sigma : _float]
+                     [sigma : _float*]
                      -> (res :  _int))))
 
 (define (gaussiangradient-band band sigma)
@@ -128,7 +128,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sigma : _float]
+                     [sigma : _float*]
                      -> (res :  _int))))
 
 (define (ggradient-band band sigma)
@@ -153,7 +153,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (laplacianofgaussian-band band scale)
@@ -180,7 +180,7 @@
                      [img_vector_yy : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (hessianmatrixofgaussian-band band scale)
@@ -208,8 +208,8 @@
                      [img_vector_yy : _cvector]
                      [width : _int]
                      [height : _int]
-                     [inner_scale : _float]
-                     [outer_scale : _float]
+                     [inner_scale : _float*]
+                     [outer_scale : _float*]
                      -> (res :  _int))))
 
 (define (structuretensor-band band inner_scale outer_scale)
@@ -237,7 +237,7 @@
                      [img_vector_yy : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (boundarytensor-band band scale)
@@ -265,7 +265,7 @@
                      [img_vector_yy : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (boundarytensor1-band band scale)
@@ -374,8 +374,8 @@
                      [img_vector_hgyy : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sigma : _float]
-                     [rho : _float]
+                     [sigma : _float*]
+                     [rho : _float*]
                      -> (res :  _int))))
 
 (define (hourglassfilter-band bands sigma rho)
@@ -401,8 +401,8 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sharpening_factor : _float]
-                     [scale : _float]
+                     [sharpening_factor : _float*]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (gsharpening-band band sharpening_factor scale)
@@ -427,7 +427,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [sharpening_factor : _float]
+                     [sharpening_factor : _float*]
                      -> (res :  _int))))
 
 (define (sharpening-band band sharpening_factor)
@@ -452,8 +452,8 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [edge_threshold : _float]
-                     [scale : _float]
+                     [edge_threshold : _float*]
+                     [scale : _float*]
                      -> (res :  _int))))
 
 (define (nonlineardiffusion-band band edge_threshold scale)
@@ -478,7 +478,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [background_label : _float]
+                     [background_label : _float*]
                      [norm : _int]
                      -> (res :  _int))))
 

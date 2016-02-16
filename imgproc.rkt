@@ -19,7 +19,7 @@
                      [resize_mode : _int]
                      -> (res :  _int))))
 
-(define (resizeimage-band  band width2 height2 resize_mode)
+(define (resizeimage-band  band width2 height2 [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2  (make-band width2 height2 0.0))
@@ -29,7 +29,7 @@
       ((1) (error "Error in vigracket.imgproc:resizeimage: Resize of image failed!!"))
       ((2) (error "Error in vigracket.imgproc:resizeimage: Resize mode must be in {0,1,2,3,4}!!")))))
 
-(define (resizeimage image width2 height2 resize_mode)
+(define (resizeimage image width2 height2 [resize_mode 1])
   (map (lambda (band) (resizeimage-band band width2 height2 resize_mode)) image))
   
 
@@ -42,11 +42,11 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [angle : _float]
+                     [angle : _float*]
                      [resize_mode : _int]
                      -> (res :  _int))))
 
-(define (rotateimage-band band angle resize_mode)
+(define (rotateimage-band band angle [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2   (make-band width height 0.0))
@@ -56,7 +56,7 @@
       ((1) (error "Error in vigracket.imgproc:rotateimage: Rotation of image failed!!"))
       ((2) (error "Error in vigracket.imgproc:rotateimage: Resize mode must be in {0,1,2,3,4}!!")))))
 
-(define (rotateimage image angle resize_mode)
+(define (rotateimage image angle [resize_mode 1])
   (map (lambda (band) (rotateimage-band  band angle resize_mode)) image))
 
 ;###############################################################################
@@ -72,7 +72,7 @@
                      [resize_mode : _int]
                      -> (res :  _int))))
 
-(define (affinewarpimage-band band affinematrix resize_mode)
+(define (affinewarpimage-band band affinematrix [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2  (make-band width height 0.0))
@@ -82,7 +82,7 @@
       ((1) (error "Error in vigracket.imgproc:affinewarpimage: Affine Warp of image failed!!"))
       ((2) (error "Error in vigracket.imgproc:affinewarpimage: Resize mode must be in {0,1,2,3,4}!!")))))
 
-(define (affinewarpimage image affinematrix resize_mode)
+(define (affinewarpimage image affinematrix [resize_mode 1])
   (map (lambda (band)(affinewarpimage-band band affinematrix resize_mode)) image))
 
   

@@ -85,7 +85,7 @@
                      [img_vector3 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [radius : _float]
+                     [radius : _float*]
                      -> (res :  _int))))
 
 (define (upwindimage-band band signum_band radius)

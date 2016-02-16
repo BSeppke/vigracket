@@ -61,9 +61,9 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
-                     [gradient_threshold  : _float]
-                     [mark : _float]
+                     [scale : _float*]
+                     [gradient_threshold  : _float*]
+                     [mark : _float*]
                      -> (res :  _int))))
 
 (define (cannyedgeimage-band band scale gradient_threshold mark)
@@ -88,9 +88,9 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [scale : _float]
-                     [gradient_threshold  : _float]
-                     [mark : _float]
+                     [scale : _float*]
+                     [gradient_threshold  : _float*]
+                     [mark : _float*]
                      -> (res :  _int))))
 
 (define (differenceofexponentialedgeimage-band band scale gradient_threshold mark)
@@ -115,7 +115,7 @@
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
-                     [mark : _float]
+                     [mark : _float*]
                      -> (res :  _int))))
 
 (define (regionimagetocrackedgeimage-band band mark)

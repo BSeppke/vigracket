@@ -24,8 +24,8 @@
                  (watersheds
                   (ggradient 
                    (resizeimage img (* 2 (image-width img))(* 2 (image-height img)) 4)
-                   1.0)))
-                0.0))
+                   1)))
+                0))
 
 (display "performing fft on image")(newline)
 (define  img3 (fouriertransform (loadimage (build-path vigracket-path "images/rect.gif"))))
@@ -33,7 +33,7 @@
 
 (display "testing rotation and reflection functions on image")(newline)
 (define  img4 (reflectimage img 3))
-(define  img5 (rotateimage img 15.0 3))
+(define  img5 (rotateimage img 15 3))
 
 
 (display "testing affine transformation on image")(newline)

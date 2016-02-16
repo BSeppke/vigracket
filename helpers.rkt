@@ -2,6 +2,7 @@
 
 (require vigracket/carray)
 (require scheme/foreign)
+(require ffi/unsafe)
 
 ;######################################################
 ;##                    IMAGES                        ##
@@ -20,6 +21,10 @@
 
 (define (float->uint8 f)
   (inexact->exact (max (min (round f) 255) 0)))
+
+(define-fun-syntax _float*
+  (syntax-id-rules (_float*)
+    [_float* (type: _float pre: (x => (+ 0.0 x)))]))
 
 ;########################## General helpers ############################
 ;pivoting of two-dimensional lists:

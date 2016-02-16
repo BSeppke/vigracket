@@ -81,564 +81,564 @@
 (define vigra_splineimageview1_accessor_c
     (get-ffi-obj 'vigra_splineimageview1_accessor_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_accessor_c
     (get-ffi-obj 'vigra_splineimageview2_accessor_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_accessor_c
     (get-ffi-obj 'vigra_splineimageview3_accessor_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_accessor_c
     (get-ffi-obj 'vigra_splineimageview4_accessor_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_accessor_c
     (get-ffi-obj 'vigra_splineimageview5_accessor_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 
 (define vigra_splineimageview1_dx_c
     (get-ffi-obj 'vigra_splineimageview1_dx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dx_c
     (get-ffi-obj 'vigra_splineimageview2_dx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dx_c
     (get-ffi-obj 'vigra_splineimageview3_dx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dx_c
     (get-ffi-obj 'vigra_splineimageview4_dx_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dx_c
     (get-ffi-obj 'vigra_splineimageview5_dx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dy_c
     (get-ffi-obj 'vigra_splineimageview1_dy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dy_c
     (get-ffi-obj 'vigra_splineimageview2_dy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dy_c
     (get-ffi-obj 'vigra_splineimageview3_dy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dy_c
     (get-ffi-obj 'vigra_splineimageview4_dy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dy_c
     (get-ffi-obj 'vigra_splineimageview5_dy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dxx_c
     (get-ffi-obj 'vigra_splineimageview1_dxx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dxx_c
     (get-ffi-obj 'vigra_splineimageview2_dxx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dxx_c
     (get-ffi-obj 'vigra_splineimageview3_dxx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dxx_c
     (get-ffi-obj 'vigra_splineimageview4_dxx_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dxx_c
     (get-ffi-obj 'vigra_splineimageview5_dxx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 
 (define vigra_splineimageview1_dxy_c
     (get-ffi-obj 'vigra_splineimageview1_dxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dxy_c
     (get-ffi-obj 'vigra_splineimageview2_dxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dxy_c
     (get-ffi-obj 'vigra_splineimageview3_dxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dxy_c
     (get-ffi-obj 'vigra_splineimageview4_dxy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dxy_c
     (get-ffi-obj 'vigra_splineimageview5_dxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 
 (define vigra_splineimageview1_dyy_c
     (get-ffi-obj 'vigra_splineimageview1_dyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dyy_c
     (get-ffi-obj 'vigra_splineimageview2_dyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dyy_c
     (get-ffi-obj 'vigra_splineimageview3_dyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dyy_c
     (get-ffi-obj 'vigra_splineimageview4_dyy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dyy_c
     (get-ffi-obj 'vigra_splineimageview5_dyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dx3_c
     (get-ffi-obj 'vigra_splineimageview1_dx3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dx3_c
     (get-ffi-obj 'vigra_splineimageview2_dx3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dx3_c
     (get-ffi-obj 'vigra_splineimageview3_dx3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dx3_c
     (get-ffi-obj 'vigra_splineimageview4_dx3_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dx3_c
     (get-ffi-obj 'vigra_splineimageview5_dx3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dxxy_c
     (get-ffi-obj 'vigra_splineimageview1_dxxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dxxy_c
     (get-ffi-obj 'vigra_splineimageview2_dxxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dxxy_c
     (get-ffi-obj 'vigra_splineimageview3_dxxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dxxy_c
     (get-ffi-obj 'vigra_splineimageview4_dxxy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dxxy_c
     (get-ffi-obj 'vigra_splineimageview5_dxxy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dxyy_c
     (get-ffi-obj 'vigra_splineimageview1_dxyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dxyy_c
     (get-ffi-obj 'vigra_splineimageview2_dxyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dxyy_c
     (get-ffi-obj 'vigra_splineimageview3_dxyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dxyy_c
     (get-ffi-obj 'vigra_splineimageview4_dxyy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dxyy_c
     (get-ffi-obj 'vigra_splineimageview5_dxyy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_dy3_c
     (get-ffi-obj 'vigra_splineimageview1_dy3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_dy3_c
     (get-ffi-obj 'vigra_splineimageview2_dy3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_dy3_c
     (get-ffi-obj 'vigra_splineimageview3_dy3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_dy3_c
     (get-ffi-obj 'vigra_splineimageview4_dy3_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_dy3_c
     (get-ffi-obj 'vigra_splineimageview5_dy3_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2_c
     (get-ffi-obj 'vigra_splineimageview1_g2_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2_c
     (get-ffi-obj 'vigra_splineimageview2_g2_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2_c
     (get-ffi-obj 'vigra_splineimageview3_g2_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2_c
     (get-ffi-obj 'vigra_splineimageview4_g2_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2_c
     (get-ffi-obj 'vigra_splineimageview5_g2_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2x_c
     (get-ffi-obj 'vigra_splineimageview1_g2x_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2x_c
     (get-ffi-obj 'vigra_splineimageview2_g2x_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2x_c
     (get-ffi-obj 'vigra_splineimageview3_g2x_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2x_c
     (get-ffi-obj 'vigra_splineimageview4_g2x_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2x_c
     (get-ffi-obj 'vigra_splineimageview5_g2x_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2y_c
     (get-ffi-obj 'vigra_splineimageview1_g2y_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2y_c
     (get-ffi-obj 'vigra_splineimageview2_g2y_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2y_c
     (get-ffi-obj 'vigra_splineimageview3_g2y_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2y_c
     (get-ffi-obj 'vigra_splineimageview4_g2y_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2y_c
     (get-ffi-obj 'vigra_splineimageview5_g2y_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2xx_c
     (get-ffi-obj 'vigra_splineimageview1_g2xx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2xx_c
     (get-ffi-obj 'vigra_splineimageview2_g2xx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2xx_c
     (get-ffi-obj 'vigra_splineimageview3_g2xx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2xx_c
     (get-ffi-obj 'vigra_splineimageview4_g2xx_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2xx_c
     (get-ffi-obj 'vigra_splineimageview5_g2xx_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2xy_c
     (get-ffi-obj 'vigra_splineimageview1_g2xy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2xy_c
     (get-ffi-obj 'vigra_splineimageview2_g2xy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2xy_c
     (get-ffi-obj 'vigra_splineimageview3_g2xy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2xy_c
     (get-ffi-obj 'vigra_splineimageview4_g2xy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2xy_c
     (get-ffi-obj 'vigra_splineimageview5_g2xy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview1_g2yy_c
     (get-ffi-obj 'vigra_splineimageview1_g2yy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview1]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview2_g2yy_c
     (get-ffi-obj 'vigra_splineimageview2_g2yy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview2]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview3_g2yy_c
     (get-ffi-obj 'vigra_splineimageview3_g2yy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) :: [siv_ptr : _splineimageview3]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview4_g2yy_c
     (get-ffi-obj 'vigra_splineimageview4_g2yy_c  vigracket-dylib-path
                  (_fun(siv_ptr x y) :: [siv_ptr : _splineimageview4]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 (define vigra_splineimageview5_g2yy_c
     (get-ffi-obj 'vigra_splineimageview5_g2yy_c  vigracket-dylib-path
                  (_fun (siv_ptr x y) ::[siv_ptr : _splineimageview5]
-                       [x : _double]
-                       [y : _double]
+                       [x : _double*]
+                       [y : _double*]
                        -> [res : _float]
                       )))
 
