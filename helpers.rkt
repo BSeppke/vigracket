@@ -64,6 +64,17 @@
                     (+ x (* (band-width band) y ))
                     val))
 
+; better accessors - unsafe/ref for bands
+(define (band-ref/unsafe band x y)
+      (cvector-ref/unsafe (band-data band)
+                   (+ x (* (band-width band) y ))))
+  
+; better accessors - unsafe/set for bands
+(define (band-set/unsafe! band x y val)
+      (cvector-set/unsafe! (band-data band)
+                    (+ x (* (band-width band) y ))
+                    val))
+
 ; copying of bands
 (define (copy-band band)
   (copy-carray band))
@@ -111,6 +122,18 @@
       (do ((x 0 (+ x 1)))
         ((= x width) )
         (func x y)))))
+
+; loop over x and y while a predicate is true:
+(define (band-while pred band)
+  (let* ((width (band-width band))
+         (height (band-height band))
+         (found  #f))
+    (do ((y 0 (+ y 1)))
+        ((or (pair? found) (= y height)) (if (pair? found) found (cons width height)))
+      (do ((x 0 (+ x 1)))
+          ((or (pair? found) (= x width)) )
+        (when (not (pred x y (band-ref band x y)))
+            (set! found (cons x y)))))))
 
 
 ;######################### Image specific functions ############################
@@ -171,6 +194,31 @@
                              (func (+ band_id 1) (cdr val_list)))))))
         (func 0 band_id))
       (cvector-set! (image-data image band_id)
+                    (+ x (* (image-width image) y ))
+                    (car val))))
+
+; better accessors - unsafe/ref for images
+(define (image-ref/unsafe image x y . band_id)
+  (if (null? band_id)
+      (letrec ((func (lambda (band_id) 
+                       (if (= band_id (image-numbands image))
+                           '()
+                           (cons (image-ref/unsafe image x y  band_id) (func (+ band_id 1)))))))
+        (func 0))
+      (cvector-ref/unsafe (image-data image (car band_id))
+                   (+ x (* (image-width image) y )))))
+  
+; better accessors - unsafe/set for images
+(define (image-set/unsafe! image x y band_id . val)
+  (if (null? val)
+      (letrec ((func (lambda (band_id val_list) 
+                       (if (= band_id (image-numbands image))
+                           (void)
+                           (begin
+                             (image-set/unsafe! image x y band_id (car val_list))
+                             (func (+ band_id 1) (cdr val_list)))))))
+        (func 0 band_id))
+      (cvector-set/unsafe! (image-data image band_id)
                     (+ x (* (image-width image) y ))
                     (car val))))
 
@@ -259,9 +307,22 @@
         ((= y height) image)
         (do ((x 0 (+ x 1)))
           ((= x width) )
-          (func x y (image-ref image x y))))))
+          (func x y (image-ref/unsafe image x y))))))
   
-  
+ 
+; loop over x and y of an image (pixel-wise) while a predicate is true:
+(define (image-while pred image)
+  (let* ((width (image-width image))
+         (height (image-height image))
+         (numBands (image-numbands image))
+         (found  #f))
+    (do ((y 0 (+ y 1)))
+        ((or (pair? found) (= y height)) (if (pair? found) found (cons width height)))
+      (do ((x 0 (+ x 1)))
+          ((or (pair? found) (= x width)) )
+        (when (not (pred x y (image-ref/unsafe image x y)))
+          (set! found (cons x y)))))))
+
 ;######################################################
 ;##                    MATRICES                      ##
 ;##--------------------------------------------------##

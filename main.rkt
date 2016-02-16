@@ -3,14 +3,14 @@
 (require vigracket/config)
 
 (require vigracket/helpers
-          vigracket/convert
-          vigracket/splineimageview
-          vigracket/filters
-          vigracket/impex
-          vigracket/imgproc
-          vigracket/morphology
-          vigracket/segmentation
-          vigracket/viewer)
+         vigracket/convert
+         vigracket/splineimageview
+         vigracket/filters
+         vigracket/impex
+         vigracket/imgproc
+         vigracket/morphology
+         vigracket/segmentation
+         vigracket/viewer)
  
 
 (provide 
@@ -28,6 +28,8 @@
            band-height
            band-ref
            band-set!
+           band-ref/unsafe
+           band-set/unsafe!
            copy-band
            band->image
            band->matrix
@@ -37,6 +39,7 @@
            band-map!
            band-for-each-index
            band-reduce
+           band-while
            
            ;images
            make-image
@@ -47,6 +50,8 @@
            image-numbands
            image-ref
            image-set!
+           image-ref/unsafe
+           image-set/unsafe!
            copy-image
            image->red-band
            image->red
@@ -61,6 +66,7 @@
            image-for-each-index
            image-for-each-pixel
            image-reduce
+           image-while
            
            ;matrices
            make-matrix

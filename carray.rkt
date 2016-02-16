@@ -29,11 +29,11 @@
              (andmap (curry equal? (car types)) (cdr types))))))
 
 ;; unsafe accessors to cvectors - need for fast traversal (if you are sure, that your index is correct)        
-(define (cvector-ref/unsafe v i)
+(define* (cvector-ref/unsafe v i)
   (ptr-ref (cvector-ptr v) (cvector-type v) i))
 
 ;; unsafe accessors to cvectors - need for fast traversal (if you are sure, that your index and value is correct)
-(define (cvector-set/unsafe! v i x)
+(define* (cvector-set/unsafe! v i x)
   (ptr-set! (cvector-ptr v) (cvector-type v) i x))
 
 ;; fast copying of cvectors
@@ -104,6 +104,7 @@
 ;; for each element.
 (provide carray? carray-data carray-dimensions 
          (rename-out [allocate-carray make-carray]))
+
 (define (allocate-carray type dimensions . init-val)
   (if (null? init-val)
       (make-carray (make-cvector type (apply * dimensions)) dimensions)
