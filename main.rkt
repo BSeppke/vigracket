@@ -37,8 +37,10 @@
            list->band
            band-map
            band-map!
-           band-for-each-index
+           band-foldl
+           band-foldr
            band-reduce
+           band-for-each-index
            band-while
            
            ;images
