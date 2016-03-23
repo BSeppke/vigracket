@@ -72,6 +72,5 @@
         (let ((bindir     (build-path vigra_c-path "bin" (string-append "win"(number->string racket-bits)))))
           (begin
             (system (string-append "copy " (path->string bindir) "\\*.dll " (path->string local-install-path)))
-            (system (string-append "copy " (path->string local-install-path) "\\zlib.dll " (path->string local-install-path)  "\\zlibwapi.dll"))
             #t))
         (error "Only Mac OS X, Unix are supported for auto build of vigra_c!")))
