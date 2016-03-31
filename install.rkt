@@ -50,7 +50,7 @@
         '())))
 
 (define (vigra-installed?) 
-  (display "Searching for vigra > 1.11.0 using 'vigra-config --version': ")
+  (display "Searching for vigra >= 1.11.0 using 'vigra-config --version': ")
   (let ((version (vigra-version)))
     (if (empty? version)
         #f
