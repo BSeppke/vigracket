@@ -40,9 +40,22 @@
 (define login_cmd (string-append "source " login_script))
 (define (system-env arg) (system (string-append login_cmd " && " arg)))
 
+(define (vigra-version)
+  (let* ((version_string
+          (with-output-to-string (lambda ()
+                                   (system-env "vigra-config --version")))))
+    (if (non-empty-string? version_string)
+        (begin (display version_string)
+               (map string->number (string-split (string-trim version_string) ".")))
+        '())))
+
 (define (vigra-installed?) 
-  (display "Searching for vigra using 'vigra-config --version': ")
-  (system-env "vigra-config --version"))
+  (display "Searching for vigra > 1.11.0 using 'vigra-config --version': ")
+  (let ((version (vigra-version)))
+    (if (empty? version)
+        #f
+        (or (and (= (first version) 1) (>= (second version) 11))
+                (> (first version) 1)))))
 
 ;; 7. For windows, we need to find out, which architecture DrRacket is built
 (require (only-in ffi/unsafe ctype-sizeof _pointer))

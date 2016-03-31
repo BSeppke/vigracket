@@ -8,15 +8,20 @@
   (lambda args 
     (sqrt (apply + (map (lambda (x) (* x x)) args)))))
 
+(define (cut-8bit val)
+  (min (max val 0.0) 255.0))
+
 (define save-path (find-system-path 'temp-dir))
 (make-directory* (build-path save-path "images"))
 
 (display "loading blox-image")(newline)
 (define img (loadimage  (build-path vigracket-path "images/blox.gif")))
 
-(display "performance test gaussian smoothing")(newline)
-(display "vigra-method [in ms]:")(newline)
+(display "test gaussian smoothing")(newline)
 (time (gsmooth img 0.3))
+
+(display "test DoG approx. as LoG (127 == zero)")(newline)
+(show-image (image-map (lambda (x) (+ 127 x)) (image-map -  (gsmooth img 2) (gsmooth img 1))))
 
 (display "performing watershed transform on resized gradient image")(newline)
  (define  img2 (regionimagetocrackedgeimage
@@ -33,7 +38,7 @@
 
 (display "testing rotation and reflection functions on image")(newline)
 (define  img4 (reflectimage img 3))
-(define  img5 (rotateimage img 15 3))
+(define  img5 (image-map cut-8bit (rotateimage img 15 3)))
 
 
 (display "testing affine transformation on image")(newline)
@@ -60,7 +65,7 @@
 (matrix-set! t2mat 0 2 (/ (image-width img) 2.0))
 (matrix-set! t2mat 1 2 (/ (image-width img) 2.0))
 
-(define  img6 (affinewarpimage img (matrix-mult t1mat (matrix-mult rotmat t2mat)) 3))
+(define  img6 (image-map cut-8bit (affinewarpimage img (matrix-mult t1mat (matrix-mult rotmat t2mat)) 3)))
 
 (display "performing distance transform on canny edges of image")(newline)
  (define  img7 (distancetransform
@@ -129,26 +134,9 @@
             "Box mean separable convolution")
 
 ;Testing the vigra w.r.t. Schnoerr's coherence enhancing shock filter
-(define (shock-image image sigma rho h iterations)
-  (if (= iterations 0)
-      image
-      (let* ((img_st_te (tensoreigenrepresentation (structuretensor image sigma rho)))
-             (img_hm  (hessianmatrixofgaussian image sigma))
-             (img_signum (image-map (lambda (e v_xx v_xy v_yy)
-                                      (let ((c (cos e))
-                                            (s (sin e)))                                              
-                                        (+ (* c c v_xx)
-                                           (* 2 c s v_xy)
-                                           (* s s v_yy))))
-                                    (third img_st_te)
-                                    (first img_hm)
-                                    (second img_hm)
-                                    (third img_hm))))
-        (shock-image (upwindimage image img_signum h) sigma rho h (- iterations 1)))))
-
-(define up_img1 (shock-image img1    2.0 6.0 0.3 1))
-(define up_img5 (shock-image up_img1 2.0 6.0 0.3 4))
-(show-image up_img5  "upwind img 5")
+(define shock_img1 (shockfilter img1    2.0 6.0 0.3 1))
+(define shock_img5 (shockfilter shock_img1 2.0 6.0 0.3 4))
+(show-image shock_img5  "Shock-filtered image (after 5 iterations)")
 
 
 ;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
@@ -195,5 +183,5 @@
 (saveimage img12  (build-path save-path "images/blox-sharpening-3.0.png"))
 (saveimage img13  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
 
-(saveimage up_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
-(saveimage up_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))
+(saveimage shock_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
+(saveimage shock_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))

@@ -495,6 +495,34 @@
 (define (distancetransform image background_label norm)
   (map (lambda (band) (distancetransform-band band background_label norm)) image))
 
+;###############################################################################
+;###################            Shock Filter                ####################
+
+(define vigra_shockfilter_c
+  (get-ffi-obj 'vigra_shockfilter_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height sigma rho upwind_factor_h iterations) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [sigma : _float*]
+                     [rho : _float*]
+                     [upwind_factor_h : _float*]
+                     [iterations : _int]
+                     -> (res :  _int))))
+
+(define (shockfilter-band band sigma rho upwind_factor_h [iterations 1])
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (band2  (make-band width height 0.0))
+         (foo   (vigra_shockfilter_c (band-data band) (band-data band2) width height sigma rho upwind_factor_h iterations)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.filters.shockfilter: Distance transformation failed!!"))
+      ((2) (error "Error in vigracket.filters.shockfilter: Iterations must be > 0 !!")))))
+
+(define (shockfilter image sigma rho upwind_factor_h [iterations 1])
+  (map (lambda (band) (shockfilter-band band sigma rho upwind_factor_h iterations)) image))
+
 (provide convolveimage-band
            convolveimage
            separableconvolveimage-band
@@ -530,4 +558,6 @@
            nonlineardiffusion-band
            nonlineardiffusion
            distancetransform-band
-           distancetransform)
+           distancetransform
+           shockfilter-band
+           shockfilter)

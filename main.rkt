@@ -218,6 +218,8 @@
            nonlineardiffusion
            distancetransform-band
            distancetransform
+           shockfilter-band
+           shockfilter
            
            ;;vigracket.imgproc
            resizeimage-band
@@ -230,6 +232,14 @@
            reflectimage
            fouriertransform-band
            fouriertransform
+           fastcrosscorrelation-band
+           fastcrosscorrelation
+           fastnormalizedcrosscorrelation-band
+           fastnormalizedcrosscorrelation
+           localmaxima-band
+           localmaxima
+           localminima-band
+           localminima
            
            ;;vigracket.segmentation
            labelimage-band
