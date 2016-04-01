@@ -240,6 +240,8 @@
            localmaxima
            localminima-band
            localminima
+           subimage-band
+           subimage
            
            ;;vigracket.segmentation
            labelimage-band

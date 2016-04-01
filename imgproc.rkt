@@ -161,7 +161,8 @@
          (foo    (vigra_fastcrosscorrelation_c (band-data band) (band-data mask_band) (band-data band2) width height mask_width mask_height)))
     (case foo
       ((0) band2)
-      ((1) (error "Error in vigracket.imgproc:fastcrosscorrelation: Fast cross-correlation of image failed!!")))))
+      ((1) (error "Error in vigracket.imgproc:fastcrosscorrelation: Fast cross-correlation of image failed!!"))
+      ((2) (error "Error in vigracket.imgproc:fastcrosscorrelation: Mask width and height need to be odd!!")))))
 
 (define (fastcrosscorrelation image mask)
   (map fastcrosscorrelation-band image mask))
@@ -190,7 +191,8 @@
          (foo    (vigra_fastnormalizedcrosscorrelation_c (band-data band) (band-data mask_band) (band-data band2) width height mask_width mask_height)))
     (case foo
       ((0) band2)
-      ((1) (error "Error in vigracket.imgproc:fastnormalizedcrosscorrelation: Fast normalized cross-correlation of image failed!!")))))
+      ((1) (error "Error in vigracket.imgproc:fastnormalizedcrosscorrelation: Fast normalized cross-correlation of image failed!!"))
+      ((2) (error "Error in vigracket.imgproc:fastnormalizedcrosscorrelation: Mask width and height need to be odd!!")))))
 
 (define (fastnormalizedcrosscorrelation image mask)
   (map fastnormalizedcrosscorrelation-band image mask))
@@ -243,6 +245,36 @@
 (define (localminima image)
   (map localminima-band image))
 
+;###############################################################################
+;###################         Resize image                   ####################
+
+(define vigra_subimage_c
+  (get-ffi-obj 'vigra_subimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height left upper right lower) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [left : _int]
+                     [upper : _int]
+                     [right : _int]
+                     [lower : _int]
+                     -> (res :  _int))))
+
+(define (subimage-band band left upper right lower)
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (cut_width (- right left))
+         (cut_height (- lower upper))
+         (band2  (make-band cut_width cut_height 0.0))
+         (foo    (vigra_subimage_c (band-data band) (band-data band2) width height left upper right lower)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.imgproc:subimage: Subimage creation failed!!"))
+      ((2) (error "Error in vigracket.imgproc:subimage: Constraints not fullfilled: left < right, upper < lower, right - left <= width, lower - upper <= height")))))
+
+(define (subimage image left upper right lower)
+  (map (lambda (band) (subimage-band band left upper right lower)) image))
+
 (provide
  resizeimage-band
            resizeimage
@@ -261,4 +293,6 @@
            localmaxima-band
            localmaxima
            localminima-band
-           localminima)
+           localminima
+           subimage-band
+           subimage)
