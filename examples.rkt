@@ -18,7 +18,7 @@
 (define img (loadimage  (build-path vigracket-path "images/blox.gif")))
 
 (display "testing subimage and correlation facilities")(newline)
-(define img_cut (subimage img 100 50 150 100)) ;;Mask needs to have odd size!
+(define img_cut (subimage img 100 50 151 101)) ;;Mask needs to have odd size!
 
 (define fcc_res (fastcrosscorrelation img img_cut))
 (define fncc_res (fastnormalizedcrosscorrelation img img_cut))
