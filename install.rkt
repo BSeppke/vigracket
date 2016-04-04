@@ -45,8 +45,8 @@
           (string-trim (with-output-to-string (lambda ()
                                    (system-env "vigra-config --version"))))))
     (if (not (equal? version_string ""))
-        (begin (display version_string)
-               (map string->number (string-split version_string) "."))
+        (begin (display version_string)(newline)
+               (map string->number (string-split version_string ".")))
         '())))
 
 (define (vigra-installed?) 
