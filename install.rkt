@@ -42,11 +42,11 @@
 
 (define (vigra-version)
   (let* ((version_string
-          (with-output-to-string (lambda ()
-                                   (system-env "vigra-config --version")))))
-    (if (non-empty-string? version_string)
+          (string-trim (with-output-to-string (lambda ()
+                                   (system-env "vigra-config --version"))))))
+    (if (not (equal? version_string ""))
         (begin (display version_string)
-               (map string->number (string-split (string-trim version_string) ".")))
+               (map string->number (string-split version_string) "."))
         '())))
 
 (define (vigra-installed?) 
