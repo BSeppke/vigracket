@@ -127,7 +127,7 @@
                                                  image))
                                        (bytes (make-bytes (* w h 4)))
                                        (foo   (send bitmap get-argb-pixels 0 0 w h bytes)))
-                                  (argb-bytes->rgbimage bytes w h img)))
+                                  (argb-bytes->rgbimage bytes img)))
         ((2htdp-image? bitmap)    (bitmap->rgbimage (2htdp-image->bitmap bitmap) image))
         (else (error "vigracket.convert.bitmap->rgbimage: Only Racket bitmap% objects and 2htdp/images can be converted to vigracket images!"))))
 
