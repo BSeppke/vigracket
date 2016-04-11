@@ -30,14 +30,14 @@
     (putenv "PATH" (string-append (path->string local-install-path) ";" (getenv "PATH"))))
 
 ;; 6. Stuff needed to compile the c-bindings if necessary...
-(define base_login_script "~/.profile")
+(define base_login_script (path->string (expand-user-path "~/.profile")))
 (define vigra_c-path (build-path local-install-path "vigra_c"))
 
 (define login_script (if (file-exists? base_login_script)
                          base_login_script
                          (path->string (build-path vigra_c-path "fallback.profile"))))
 
-(define login_cmd (string-append "source " login_script))
+(define login_cmd (string-append ". " login_script))
 (define (system-env arg) (system (string-append login_cmd " && " arg)))
 
 (define (vigra-version)
