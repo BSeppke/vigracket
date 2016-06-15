@@ -61,8 +61,8 @@
 (require (only-in ffi/unsafe ctype-sizeof _pointer))
 (define racket-bits (* 8 (ctype-sizeof _pointer)))
 (define cmake_flags (if (= racket-bits 32)
-                        "-DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32"
-                        ""))
+                        "-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32"
+                        "-DCMAKE_BUILD_TYPE=Release"))
 
 
 ; 8. The compilation routine (at least for macosx and unix)
