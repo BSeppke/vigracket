@@ -1,5 +1,7 @@
 #lang racket
 
+(require ffi/unsafe)
+
 ;; Module constants
 (define vigracket-path  (collection-path "vigracket"))
 (define vigracket-version "1.1.0")
