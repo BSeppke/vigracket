@@ -8,7 +8,7 @@
 
 ;; 1. Create local collects directory if not already existing
 (when (not (directory-exists? local-collects-path))
-  (system (string-append "mkdir -p " (path->string local-collects-path))))
+  (make-directory* local-collects-path))
 
 ;; 2. If vigracket-collects dir extist, delete it.
 (when (directory-exists? local-install-path)
