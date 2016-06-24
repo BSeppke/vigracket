@@ -246,7 +246,7 @@
   (map localminima-band image))
 
 ;###############################################################################
-;###################         Resize image                   ####################
+;###################            Sub image                   ####################
 
 (define vigra_subimage_c
   (get-ffi-obj 'vigra_subimage_c vigracket-dylib-path
@@ -275,6 +275,37 @@
 (define (subimage image left upper right lower)
   (map (lambda (band) (subimage-band band left upper right lower)) image))
 
+
+;###############################################################################
+;###################         Padding image                  ####################
+
+(define vigra_paddimage_c
+  (get-ffi-obj 'vigra_paddimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height left upper right lower) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [left : _int]
+                     [upper : _int]
+                     [right : _int]
+                     [lower : _int]
+                     -> (res :  _int))))
+
+(define (paddimage-band band left upper right lower)
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (padd_width (+ right width left))
+         (padd_height (+ lower height upper))
+         (band2  (make-band padd_width padd_height 0.0))
+         (foo    (vigra_paddimage_c (band-data band) (band-data band2) width height left upper right lower)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.imgproc:paddimage: Padding image creation failed!!"))
+      ((2) (error "Error in vigracket.imgproc:paddimage: Constraints not fullfilled: left & right >= 0, upper & lower >= 0")))))
+
+(define (paddimage image left upper right lower)
+  (map (lambda (band) (paddimage-band band left upper right lower)) image))
+
 (provide
  resizeimage-band
            resizeimage
@@ -295,4 +326,6 @@
            localminima-band
            localminima
            subimage-band
-           subimage)
+           subimage
+           paddimage-band
+           paddimage)

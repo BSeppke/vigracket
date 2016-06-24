@@ -105,6 +105,7 @@
 (show-image  (image->green img1) "Lennas green channel")
 (show-image  (image->blue img1) "Lennas blue channel")
 (show-image  img1 "Lenna in RGB")
+(show-image  (paddimage img1 10 20 30 40) "Padded Lenna in RGB")
 
 ; Tensor tests
 (define img1_st  (structuretensor img1 1.0 4.0))

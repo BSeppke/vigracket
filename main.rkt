@@ -242,6 +242,8 @@
            localminima
            subimage-band
            subimage
+           paddimage-band
+           paddimage
            
            ;;vigracket.segmentation
            labelimage-band
