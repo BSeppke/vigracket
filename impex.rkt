@@ -17,7 +17,7 @@
 (define get_numbands_c
     (get-ffi-obj 'get_numbands_c vigracket-dylib-path
                 (_fun [filename : _string]
-                      -> [height : _int])))
+                      -> [numbands : _int])))
 
 ;###############################################################################
 ;###################             Loading images             ####################
