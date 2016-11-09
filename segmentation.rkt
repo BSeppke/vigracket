@@ -71,7 +71,7 @@
          (band2 (make-band width height 0.0))
          (foo   (vigra_slic_gray_c (band-data band) (band-data band2) width height seedDistance intensityScaling iterations)))
     (if (= foo -1)
-        (error	"Error in vigracket.segmentation.slic_gray: SLIC Segmentation of gray image failed!")
+        (error	"Error in vigracket.segmentation.slic-band: SLIC Segmentation of gray image failed!")
         band2)))
 
 (define vigra_slic_rgb_c
