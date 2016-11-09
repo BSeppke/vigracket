@@ -250,6 +250,9 @@
            labelimage
            watersheds-band
            watersheds
+           slic-band
+           slic-rgb
+           slic
            cannyedgeimage-band
            cannyedgeimage
            differenceofexponentialedgeimage-band

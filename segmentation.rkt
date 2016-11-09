@@ -45,11 +45,61 @@
 	 (band2 (make-band width height 0.0))
 	 (foo   (vigra_watersheds_c (band-data band) (band-data band2) width height)))
     (if (= foo -1)
-        (error	"Error in vigracl.segmentation.watersheds: Watershed Transform of image failed!")
+        (error	"Error in vigracket.segmentation.watersheds: Watershed Transform of image failed!")
         band2)))
 	  
 (define (watersheds image)
   (map watersheds-band image))
+	  
+;###############################################################################
+;###################      SLIC Segmentation Algorithm        ###################    
+
+(define vigra_slic_gray_c
+  (get-ffi-obj 'vigra_slic_gray_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height seedDistance intensityScaling iterations) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [seedDistance : _int]
+                     [intensityScaling : _double]
+                     [iterations : _int]
+                     -> (res :  _int))))
+
+(define (slic-band band [seedDistance 15] [intensityScaling 20.0] [iterations 40])
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (band2 (make-band width height 0.0))
+         (foo   (vigra_slic_gray_c (band-data band) (band-data band2) width height seedDistance intensityScaling iterations)))
+    (if (= foo -1)
+        (error	"Error in vigracket.segmentation.slic_gray: SLIC Segmentation of gray image failed!")
+        band2)))
+
+(define vigra_slic_rgb_c
+  (get-ffi-obj 'vigra_slic_rgb_c vigracket-dylib-path
+               (_fun (img_vector1_r img_vector1_g img_vector1_b img_vector2 width height seedDistance intensityScaling iterations) :: [img_vector1_r : _cvector]
+                     [img_vector1_g : _cvector]
+                     [img_vector1_b : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [seedDistance : _int]
+                     [intensityScaling : _double]
+                     [iterations : _int]
+                     -> (res :  _int))))
+
+(define (slic-rgb band_r band_g band_b [seedDistance 15] [intensityScaling 20.0] [iterations 40])
+  (let* ((width  (band-width  band_r))
+         (height (band-height band_r))
+         (band2 (make-band width height 0.0))
+         (foo   (vigra_slic_rgb_c (band-data band_r) (band-data band_g) (band-data band_b) (band-data band2) width height seedDistance intensityScaling iterations)))
+    (if (= foo -1)
+        (error	"Error in vigracket.segmentation.slic_rgb: SLIC Segmentation of rgb image failed!")
+        band2)))
+	  
+(define (slic image [seedDistance 15] [intensityScaling 20.0] [iterations 40])
+  (if (= (length image) 3)
+      (list (slic-rgb (first image) (second image) (third image) seedDistance intensityScaling iterations))
+      (map (curryr slic-band seedDistance intensityScaling iterations) image)))
 
 
 ;###############################################################################
@@ -135,6 +185,9 @@
            labelimage
            watersheds-band
            watersheds
+           slic-band
+           slic-rgb
+           slic
            cannyedgeimage-band
            cannyedgeimage
            differenceofexponentialedgeimage-band

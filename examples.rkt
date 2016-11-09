@@ -176,7 +176,9 @@
                    (image-set! new_image x y (vector-ref normalized_colors region_id))))
                  new_image)))
 
-(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1) 0.0) "img1-regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1) 0.0) "img1 - watershed regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (slic img1) img1) 0.0) "img1 - slic regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
 ;(define test (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1))
 
 (display "saving resulting images")(newline)
