@@ -10,9 +10,9 @@
 
 (define vigra_convolveimage_c
   (get-ffi-obj 'vigra_convolveimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 kernel_vector width height kernel_width kernel_height) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
+               (_fun (img_vector1 kernel_vector img_vector2 width height kernel_width kernel_height) :: [img_vector1 : _cvector]
                      [kernel_vector : _cvector]
+                     [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
                      [kernel_width : _int]
@@ -40,10 +40,10 @@
 
 (define vigra_separableconvolveimage_c
   (get-ffi-obj 'vigra_separableconvolveimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 kernel_vector_h kernel_vector_v width height kernel_width kernel_height) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
+               (_fun (img_vector1 kernel_vector_h kernel_vector_v img_vector2 width height kernel_width kernel_height) :: [img_vector1 : _cvector]
                      [kernel_vector_h : _cvector]
                      [kernel_vector_v : _cvector]
+                     [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
                      [kernel_width : _int]
