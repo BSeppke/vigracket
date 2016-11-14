@@ -25,7 +25,9 @@
          (kernel_width  (matrix-cols  kernel_matrix))
 	 (kernel_height (matrix-rows  kernel_matrix))
 	 (band2   (make-band width height 0.0))
-         (foo     (vigra_convolveimage_c (band-data band) (band-data band2) (matrix-data kernel_matrix) width height kernel_width kernel_height)))
+         (foo     (vigra_convolveimage_c (band-data band) (matrix-data kernel_matrix)
+                                         (band-data band2)
+                                         width height kernel_width kernel_height)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.colvolveimage: Convolution with kernel failed!"))
@@ -56,8 +58,8 @@
          (kernel_width  (matrix-cols  kernel_matrix_h))
 	 (kernel_height (matrix-rows  kernel_matrix_v))
 	 (band2   (make-band width height 0.0))
-         (foo     (vigra_separableconvolveimage_c (band-data band) (band-data band2) 
-                                                  (matrix-data kernel_matrix_h) (matrix-data kernel_matrix_v)  
+         (foo     (vigra_separableconvolveimage_c (band-data band) (matrix-data kernel_matrix_h) (matrix-data kernel_matrix_v)
+                                                  (band-data band2) 
                                                   width height kernel_width kernel_height)))
     (case foo
       ((0) band2)
