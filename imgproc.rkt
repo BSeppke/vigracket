@@ -64,9 +64,10 @@
 
 (define vigra_affinewarpimage_c
   (get-ffi-obj 'vigra_affinewarpimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  affineMat width height resize_mode) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
+               (_fun (img_vector1  affineMat img_vector2  width height resize_mode)
+                  :: [img_vector1 : _cvector]
                      [affineMat   : _cvector]
+                     [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
                      [resize_mode : _int]
@@ -76,7 +77,7 @@
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2  (make-band width height 0.0))
-	 (foo    (vigra_affinewarpimage_c (band-data band) (band-data band2) (matrix-data affinematrix) width height resize_mode)))
+	 (foo    (vigra_affinewarpimage_c (band-data band) (matrix-data affinematrix) (band-data band2) width height resize_mode)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:affinewarpimage: Affine Warp of image failed!!"))

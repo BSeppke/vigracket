@@ -6,6 +6,7 @@
          vigracket/convert
          vigracket/splineimageview
          vigracket/filters
+         vigracket/tensors
          vigracket/impex
          vigracket/imgproc
          vigracket/morphology
@@ -196,6 +197,16 @@
            laplacianofgaussian
            hessianmatrixofgaussian-band
            hessianmatrixofgaussian
+           gsharpening-band
+           gsharpening
+           sharpening-band
+           sharpening
+           nonlineardiffusion-band
+           nonlineardiffusion
+           shockfilter-band
+           shockfilter
+
+           ;;vigracket.tensors
            structuretensor-band
            structuretensor
            boundarytensor-band
@@ -210,16 +221,6 @@
            tensortoedgecorner
            hourglassfilter-band
            hourglassfilter
-           gsharpening-band
-           gsharpening
-           sharpening-band
-           sharpening
-           nonlineardiffusion-band
-           nonlineardiffusion
-           distancetransform-band
-           distancetransform
-           shockfilter-band
-           shockfilter
            
            ;;vigracket.imgproc
            resizeimage-band
@@ -261,6 +262,8 @@
            regionimagetocrackedgeimage
            
            ;;vigracket.morphology
+           distancetransform-band
+           distancetransform
            erodeimage-band
            erodeimage
            dilateimage-band

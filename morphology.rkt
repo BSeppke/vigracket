@@ -5,6 +5,33 @@
 (require scheme/foreign)
 (unsafe!)
 
+
+;###############################################################################
+;###################          Distance Transform            ####################
+
+(define vigra_distancetransform_c
+  (get-ffi-obj 'vigra_distancetransform_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height background_label norm) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [background_label : _float*]
+                     [norm : _int]
+                     -> (res :  _int))))
+
+(define (distancetransform-band band background_label norm)
+  (let* ((width  (band-width  band))
+	 (height (band-height band))
+	 (band2   (make-band width height 0.0))
+	 (foo   (vigra_distancetransform_c (band-data band) (band-data band2) width height background_label norm)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.filters.distancetransform: Distance transformation failed!!"))
+      ((2) (error "Error in vigracket.filters.distancetransform: Norm must be in {0,1,2} !!")))))
+
+(define (distancetransform image background_label norm)
+  (map (lambda (band) (distancetransform-band band background_label norm)) image))
+
 ;###############################################################################
 ;###################         Erode image                   ####################
 
@@ -78,8 +105,8 @@
 ;###############################################################################
 ;###################         Upwind image                   ####################
 
-(define vigraext_upwind_c
-  (get-ffi-obj 'vigraext_upwind_c vigracket-dylib-path
+(define vigra_upwindimage_c
+  (get-ffi-obj 'vigra_upwindimage_c vigracket-dylib-path
                (_fun (img_vector1 img_vector2 img_vector3  width height radius) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [img_vector3 : _cvector]
@@ -92,7 +119,7 @@
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2 (make-band width height 0.0))
-	 (foo   (vigraext_upwind_c (band-data band) (band-data signum_band) (band-data band2) width height radius)))
+	 (foo   (vigra_upwindimage_c (band-data band) (band-data signum_band) (band-data band2) width height radius)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.morphology:upwindimage: Upwinding of image failed!!")))))
@@ -100,8 +127,9 @@
 (define (upwindimage image signum_image radius)
   (map (lambda (band signum_band) (upwindimage-band band signum_band radius)) image signum_image))
 
-
-(provide 
+(provide
+           distancetransform-band
+           distancetransform
            erodeimage-band
            erodeimage
            dilateimage-band

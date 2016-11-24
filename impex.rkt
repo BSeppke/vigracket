@@ -6,16 +6,16 @@
 (unsafe!)
 
 ;############ Getting Dimensions and # of Bands of an image-file    ############
-(define get_width_c
-    (get-ffi-obj 'get_width_c vigracket-dylib-path
+(define vigra_imagewidth_c
+    (get-ffi-obj 'vigra_imagewidth_c vigracket-dylib-path
                 (_fun [filename : _string]
                       -> [width : _int])))
-(define get_height_c
-    (get-ffi-obj 'get_height_c vigracket-dylib-path
+(define vigra_imageheight_c
+    (get-ffi-obj 'vigra_imageheight_c vigracket-dylib-path
                 (_fun [filename : _string]
                       -> [height : _int])))
-(define get_numbands_c
-    (get-ffi-obj 'get_numbands_c vigracket-dylib-path
+(define vigra_imagenumbands_c
+    (get-ffi-obj 'vigra_imagenumbands_c vigracket-dylib-path
                 (_fun [filename : _string]
                       -> [numbands : _int])))
 
@@ -33,8 +33,8 @@
 
 
 (define (loadgrayimage filename)
-  (let* ((width (get_width_c filename))
-         (height (get_height_c filename))
+  (let* ((width (vigra_imagewidth_c filename))
+         (height (vigra_imageheight_c filename))
 	 (img (make-image width height 1 0.0))
          (foo  (vigra_importgrayimage_c (image-data img 0) width height filename)))
    (case foo
@@ -56,8 +56,8 @@
 
 
 (define (loadrgbimage filename)
-  (let* ((width (get_width_c filename))
-         (height (get_height_c filename))
+  (let* ((width (vigra_imagewidth_c filename))
+         (height (vigra_imageheight_c filename))
 	 (img (make-image width height 3 0.0 0.0 0.0))
          (foo  (vigra_importrgbimage_c (image-data img 0)  (image-data img 1)  (image-data img 2) width height filename)))
    (case foo
@@ -69,7 +69,7 @@
 
 ;######    Generic (choose automatically if image is gray or colored)    #######
 (define (loadimage filename)
-  (case (get_numbands_c filename)
+  (case (vigra_imagenumbands_c filename)
     ((1) (loadgrayimage filename))
     ((3) (loadrgbimage filename))
     (else  (error "Error in vigracket.impex.loadimage: Image has neither 1 nor 3 bands and thus cannot be loaded!"))))
