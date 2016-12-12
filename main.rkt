@@ -201,6 +201,8 @@
            gsharpening
            sharpening-band
            sharpening
+           medianfilter-band
+           medianfilter
            nonlineardiffusion-band
            nonlineardiffusion
            shockfilter-band

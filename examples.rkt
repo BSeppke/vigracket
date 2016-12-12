@@ -92,7 +92,8 @@
 (define  img10 (laplacianofgaussian img 3.0))
 (define  img11 (gsharpening img 0.5 3.0))
 (define  img12 (sharpening img 3.0))
-(define  img13 (nonlineardiffusion img 0.1 2.0))
+(define  img13 (medianfilter img 3 3))
+(define  img14 (nonlineardiffusion img 0.1 2.0))
 
 
 (show-image img5)
@@ -196,7 +197,8 @@
 (saveimage img10  (build-path save-path "images/blox-log-3.0.png"))
 (saveimage img11  (build-path save-path "images/blox-gsharpening-0.5-3.0.png"))
 (saveimage img12  (build-path save-path "images/blox-sharpening-3.0.png"))
-(saveimage img13  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
+(saveimage img13  (build-path save-path "images/blox-medianfilter-3x3.png"))
+(saveimage img14  (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
 
 (saveimage shock_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
 (saveimage shock_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))

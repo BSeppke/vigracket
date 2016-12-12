@@ -251,6 +251,31 @@
   (map (lambda (band) (sharpening-band band sharpening_factor)) image))
 
 ;###############################################################################
+;###################          Median Filtering              ####################
+
+(define vigra_medianfilter_c
+  (get-ffi-obj 'vigra_medianfilter_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height window_width window_height) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [window_width : _int]
+                     [window_height : _int]
+                     -> (res :  _int))))
+
+(define (medianfilter-band band window_width window_height)
+  (let* ((width  (band-width  band))
+	 (height (band-height band))
+	 (band2   (make-band width height 0.0))
+	 (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.filters.medianfilter: Median filtering failed!!")))))
+
+(define (medianfilter image window_width window_height)
+  (map (lambda (band) (medianfilter-band band window_width window_height)) image))
+
+;###############################################################################
 ;###################          Nonlinear Diffusion           ####################
 
 (define vigra_nonlineardiffusion_c
@@ -270,7 +295,7 @@
 	 (foo   (vigra_nonlineardiffusion_c (band-data band) (band-data band2) width height edge_threshold scale)))
     (case foo
       ((0) band2)
-      ((1) (error "Error in vigracl.filters.nonlineardiffusion: Non linear Diffusion failed!!")))))
+      ((1) (error "Error in vigracket.filters.nonlineardiffusion: Non linear Diffusion failed!!")))))
 
 (define (nonlineardiffusion image edge_threshold scale)
   (map (lambda (band) (nonlineardiffusion-band band edge_threshold scale)) image))
@@ -321,6 +346,8 @@
            gsharpening
            sharpening-band
            sharpening
+           medianfilter-band
+           medianfilter
            nonlineardiffusion-band
            nonlineardiffusion
            shockfilter-band
