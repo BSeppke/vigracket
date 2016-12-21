@@ -2,6 +2,7 @@
 
 (require vigracket/config)
 (require vigracket/helpers)
+(require vigracket/imgproc)
 (require scheme/foreign)
 (unsafe!)
 
@@ -10,46 +11,81 @@
 
 (define vigra_labelimage_c
   (get-ffi-obj 'vigra_labelimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 img_vector2  width height eight_connectivity) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
+                     [eight_connectivity : _bool]
                      -> (res :  _int))))
 
-(define (labelimage-band band)
+(define (labelimage-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2 (make-band width height 0.0))
-	 (foo   (vigra_labelimage_c (band-data band) (band-data band2) width height)))
+	 (foo   (vigra_labelimage_c (band-data band) (band-data band2) width height eight_connectivity)))
     (if (= foo -1)
         (error "Error in vigracket.segmentation.labelimage: Labeling of image failed!")
         band2)))
 	  
-(define (labelimage image)
-  (map labelimage-band image))
+(define (labelimage image [eight_connectivity #t])
+  (map (curryr labelimage-band eight_connectivity) image))
 	  
 ;###############################################################################
 ;###################      Watershed Transform (Union-Find)  ####################
 
-(define vigra_watersheds_c
-  (get-ffi-obj 'vigra_watersheds_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height) :: [img_vector1 : _cvector]
+(define vigra_watershedsunionfind_c
+  (get-ffi-obj 'vigra_watershedsunionfind_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height eight_connectivity) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
+                     [eight_connectivity : _bool]
                      -> (res :  _int))))
 
-(define (watersheds-band band)
+(define (watersheds-uf-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2 (make-band width height 0.0))
-	 (foo   (vigra_watersheds_c (band-data band) (band-data band2) width height)))
+	 (foo   (vigra_watershedsunionfind_c (band-data band) (band-data band2) width height eight_connectivity)))
     (if (= foo -1)
-        (error	"Error in vigracket.segmentation.watersheds: Watershed Transform of image failed!")
+        (error	"Error in vigracket.segmentation.watershed-uf: Watershed Transform (union-find method) of image failed!")
         band2)))
 	  
-(define (watersheds image)
-  (map watersheds-band image))
+(define (watersheds-uf image [eight_connectivity #t])
+  (map (curryr watersheds-uf-band eight_connectivity) image))
+	  
+;###############################################################################
+;###################  Watershed Transform (Region-Growing)  ####################
+
+(define vigra_watershedsregiongrowing_c
+  (get-ffi-obj 'vigra_watershedsregiongrowing_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height eight_connectivity keep_contours use_turbo stop_cost) :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [eight_connectivity : _bool]
+                     [keep_contours : _bool]
+                     [use_turbo : _bool]
+                     [stop_cost : _double]
+                     -> (res :  _int))))
+
+(define (watersheds-rg-band band [seeds-band '()] [eight_connectivity #t] [keep_contours #f] [use_turbo #f] [stop-cost -1.0])
+  (let* ((width  (band-width  band))
+	 (height (band-height band))
+	 (band2 (if (empty? seeds-band)
+                    (labelimage-band (localminima-band band))
+                    seeds-band))
+	 (foo   (vigra_watershedsregiongrowing_c (band-data band) (band-data band2) width height eight_connectivity keep_contours use_turbo stop-cost)))
+    (if (= foo -1)
+        (error	"Error in vigracket.segmentation.watersheds-rg: Watershed Transform (region-growing method) of image failed!")
+        band2)))
+	  
+(define (watersheds-rg image [seeds '()][eight_connectivity #t] [keep_contours #f] [use_turbo #f] [stop-cost -1.0])
+  (map (curryr watersheds-rg-band eight_connectivity keep_contours use_turbo stop-cost)
+       image
+       (if (empty? seeds)
+           (labelimage (localminima image))
+           seeds)))
 	  
 ;###############################################################################
 ;###################      SLIC Segmentation Algorithm        ###################    
@@ -183,8 +219,10 @@
 (provide 
            labelimage-band
            labelimage
-           watersheds-band
-           watersheds
+           watersheds-uf-band
+           watersheds-uf
+           watersheds-rg-band
+           watersheds-rg
            slic-band
            slic-rgb
            slic
