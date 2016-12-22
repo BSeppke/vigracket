@@ -59,21 +59,22 @@
 
 (define vigra_watershedsregiongrowing_c
   (get-ffi-obj 'vigra_watershedsregiongrowing_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height eight_connectivity keep_contours use_turbo stop_cost) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [eight_connectivity : _bool]
-                     [keep_contours : _bool]
-                     [use_turbo : _bool]
-                     [stop_cost : _double]
+               (_fun (img_vector1 img_vector2 width height eight_connectivity keep_contours use_turbo stop_cost)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [eight_connectivity : _bool]
+                        [keep_contours : _bool]
+                        [use_turbo : _bool]
+                        [stop_cost : _double]
                      -> (res :  _int))))
 
 (define (watersheds-rg-band band [seeds-band '()] [eight_connectivity #t] [keep_contours #f] [use_turbo #f] [stop-cost -1.0])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2 (if (empty? seeds-band)
-                    (labelimage-band (localminima-band band))
+                    (band-map (curryr - 1.0) (labelimage-band (localminima-band band)))
                     seeds-band))
 	 (foo   (vigra_watershedsregiongrowing_c (band-data band) (band-data band2) width height eight_connectivity keep_contours use_turbo stop-cost)))
     (if (= foo -1)
@@ -84,7 +85,7 @@
   (map (curryr watersheds-rg-band eight_connectivity keep_contours use_turbo stop-cost)
        image
        (if (empty? seeds)
-           (labelimage (localminima image))
+           (image-map (curryr - 1.0) (labelimage (localminima image)))
            seeds)))
 	  
 ;###############################################################################
