@@ -36,9 +36,16 @@
 (show-image (image-map (lambda (x) (+ 127 x)) (image-map -  (gsmooth img 2) (gsmooth img 1))))
 
 (display "performing watershed transform on resized gradient image")(newline)
- (define  img2 (regionimagetocrackedgeimage
+(define  img2a (regionimagetocrackedgeimage
                 (labelimage
-                 (watersheds
+                 (watersheds-uf
+                  (ggradient 
+                   (resizeimage img (* 2 (image-width img))(* 2 (image-height img)) 4)
+                   1)))
+                0))
+(define  img2b (regionimagetocrackedgeimage
+                (labelimage
+                 (watersheds-rg
                   (ggradient 
                    (resizeimage img (* 2 (image-width img))(* 2 (image-height img)) 4)
                    1)))
@@ -177,13 +184,13 @@
                    (image-set! new_image x y (vector-ref normalized_colors region_id))))
                  new_image)))
 
-(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1) 0.0) "img1 - watershed regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds-rg (ggradient (image->green img1) 2.0)) img1) 0.0) "img1 - watershed regions")
 (show-image (regionimagetocrackedgeimage (meanColorImage (slic img1) img1) 0.0) "img1 - slic regions")
 (show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
-;(define test (meanColorImage (watersheds (ggradient (image->green img1)  2.0)) img1))
 
 (display "saving resulting images")(newline)
-(saveimage img2   (build-path save-path "images/blox-relabeled-watersheds-on-resized-gradient-image.png"))
+(saveimage img2a   (build-path save-path "images/blox-relabeled-watersheds-uf-on-resized-gradient-image.png"))
+(saveimage img2b   (build-path save-path "images/blox-relabeled-watersheds-rg-on-resized-gradient-image.png"))
 
 (saveimage img3magnitude (build-path save-path "images/rect-fft-magnitude.png"))
 (saveimage (image-map sqrt img3magnitude) (build-path save-path "images/rect-fft-sqrt-magnitude.png"))

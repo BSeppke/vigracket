@@ -251,8 +251,10 @@
            ;;vigracket.segmentation
            labelimage-band
            labelimage
-           watersheds-band
-           watersheds
+           watersheds-uf-band
+           watersheds-uf
+           watersheds-rg-band
+           watersheds-rg
            slic-band
            slic-rgb
            slic

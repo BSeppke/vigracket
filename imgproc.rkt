@@ -203,48 +203,50 @@
 
 (define vigra_localmaxima_c
   (get-ffi-obj 'vigra_localmaxima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 img_vector2 width height eight_connectivity) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
+                     [eight_connectivity : _bool]
                      -> (res :  _int))))
 
-(define (localmaxima-band band)
+(define (localmaxima-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (band2  (make-band width height 0.0))
-         (foo   (vigra_localmaxima_c (band-data band) (band-data band2) width height)))
+         (foo   (vigra_localmaxima_c (band-data band) (band-data band2) width height eight_connectivity)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:localmaxima: Finding local maxima of image failed!!")))))
 
 
-(define (localmaxima image)
-  (map localmaxima-band image))
+(define (localmaxima image [eight_connectivity #t])
+  (map (curryr localmaxima-band eight_connectivity) image))
 
 ;###############################################################################
 ;###################           Local Minima Extraction      ####################
 
 (define vigra_localminima_c
   (get-ffi-obj 'vigra_localminima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 img_vector2 width height eight_connectivity) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
+                     [eight_connectivity : _bool]
                      -> (res :  _int))))
 
-(define (localminima-band band)
+(define (localminima-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (band2  (make-band width height 0.0))
-         (foo   (vigra_localminima_c (band-data band) (band-data band2) width height)))
+         (foo   (vigra_localminima_c (band-data band) (band-data band2) width height eight_connectivity)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:localminima: Finding local minima of image failed!!")))))
 
 
-(define (localminima image)
-  (map localminima-band image))
+(define (localminima image [eight_connectivity #t])
+  (map (curryr localminima-band eight_connectivity) image))
 
 ;###############################################################################
 ;###################            Sub image                   ####################
