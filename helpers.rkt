@@ -26,6 +26,10 @@
   (syntax-id-rules (_float*)
     [_float* (type: _float pre: (x => (+ 0.0 x)))]))
 
+(define-fun-syntax _int*
+  (syntax-id-rules (_int*)
+    [_int* (type: _int pre: (x => (inexact->exact (round x))))]))
+
 ;########################## General helpers ############################
 ;pivoting of two-dimensional lists:
 ; '((st_r_xx st_r_xy st_r_yy)           '((st_r_xx st_g_xx st_b_xx)

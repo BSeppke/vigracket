@@ -264,6 +264,9 @@
            differenceofexponentialedgeimage
            regionimagetocrackedgeimage-band
            regionimagetocrackedgeimage
+           extractfeatures-band
+           extractfeatures-rgb
+           extractfeatures
            
            ;;vigracket.morphology
            distancetransform-band

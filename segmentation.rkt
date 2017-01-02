@@ -18,17 +18,30 @@
                      [eight_connectivity : _bool]
                      -> (res :  _int))))
 
-(define (labelimage-band band [eight_connectivity #t])
+(define vigra_labelimagewithbackground_c
+  (get-ffi-obj 'vigra_labelimagewithbackground_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height eight_connectivity background)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [eight_connectivity : _bool]
+                        [background  : _float*]
+                     -> (res :  _int))))
+
+(define (labelimage-band band [eight_connectivity #t] [background '()])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2 (make-band width height 0.0))
-	 (foo   (vigra_labelimage_c (band-data band) (band-data band2) width height eight_connectivity)))
+	 (foo   (if (number? background)
+                    (vigra_labelimagewithbackground_c (band-data band) (band-data band2) width height eight_connectivity background)
+                    (vigra_labelimage_c (band-data band) (band-data band2) width height eight_connectivity))))
     (if (= foo -1)
         (error "Error in vigracket.segmentation.labelimage: Labeling of image failed!")
         band2)))
 	  
-(define (labelimage image [eight_connectivity #t])
-  (map (curryr labelimage-band eight_connectivity) image))
+(define (labelimage image [eight_connectivity #t] [background '()])
+  (map (curryr labelimage-band eight_connectivity background) image))
 	  
 ;###############################################################################
 ;###################      Watershed Transform (Union-Find)  ####################
@@ -217,6 +230,58 @@
 (define (regionimagetocrackedgeimage image mark)
   (map (lambda (band) (regionimagetocrackedgeimage-band band mark)) image))
 
+
+	  
+;###############################################################################
+;###################           Feature Extraction            ###################    
+
+(define vigra_extractfeatures_gray_c
+  (get-ffi-obj 'vigra_extractfeatures_gray_c  vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height max_label)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [max_label : _int*]
+                     -> (res :  _int))))
+
+(define (extractfeatures-band band label-band [max_label (band-reduce max label-band 0)])
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (band3 (make-band 11 (+ (inexact->exact (round max_label)) 1)))
+         (foo   (vigra_extractfeatures_gray_c (band-data band) (band-data label-band) (band-data band3) width height max_label)))
+    (if (= foo 1)
+        (error	"Error in vigracket.segmentation.vigra_extractfeatures_gray_c: Region-wise feature extraction of gray image failed!")
+        band3)))
+
+
+(define vigra_extractfeatures_rgb_c
+  (get-ffi-obj 'vigra_extractfeatures_rgb_c vigracket-dylib-path
+               (_fun (img_r_vector1 img_g_vector1 img_b_vector1 img_vector2 img_vector3 width height max_label)
+                     :: [img_r_vector1 : _cvector]
+                        [img_g_vector1 : _cvector]
+                        [img_b_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [max_label : _int*]
+                     -> (res :  _int))))
+
+(define (extractfeatures-rgb band_r band_g band_b label-band [max_label (band-reduce max label-band 0)])
+  (let* ((width  (band-width  band_r))
+         (height (band-height band_r))
+         (band3 (make-band 19 (+ (inexact->exact (round max_label)) 1)))
+         (foo   (vigra_extractfeatures_rgb_c (band-data band_r) (band-data band_g) (band-data band_b) (band-data label-band) (band-data band3) width height max_label)))
+    (if (= foo 1)
+        (error	"Error in vigracket.segmentation.vigra_extractfeatures_rgb_c: Region-wise feature extraction of gray image failed!")
+        band3)))
+	  
+(define (extractfeatures image labels [max_label (image-reduce max labels 0)])
+  (if (and (= (length image) 3) (= (length labels) 1))
+      (list (extractfeatures-rgb (first image) (second image) (third image) (first labels)))
+      (map extractfeatures-band image labels max_label)))
 (provide 
            labelimage-band
            labelimage
@@ -232,4 +297,7 @@
            differenceofexponentialedgeimage-band
            differenceofexponentialedgeimage
            regionimagetocrackedgeimage-band
-           regionimagetocrackedgeimage)
+           regionimagetocrackedgeimage
+           extractfeatures-band
+           extractfeatures-rgb
+           extractfeatures)

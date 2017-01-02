@@ -160,6 +160,7 @@
 (show-image shock_img5  "Shock-filtered image (after 5 iterations)")
 
 
+#|
 ;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
 (define (meanColorImage segmentation image)
   (let* ((region_count (inexact->exact	(+ (car (image-reduce max segmentation 0))  1)))
@@ -186,6 +187,29 @@
 
 (show-image (regionimagetocrackedgeimage (meanColorImage (watersheds-rg (ggradient (image->green img1) 2.0)) img1) 0.0) "img1 - watershed regions")
 (show-image (regionimagetocrackedgeimage (meanColorImage (slic img1) img1) 0.0) "img1 - slic regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
+|#
+
+;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
+(define (meanColorImage segmentation image)
+  (let ((image_stats (extractfeatures image segmentation)))
+        (if (= (image-width image_stats) 19)
+            (let* ((region->meanColorBand (lambda (region_id col_id)
+                                                      (image-ref image_stats col_id (inexact->exact (round region_id)) 0)))
+                   (region->meanColorBand_r (curryr region->meanColorBand 13))
+                   (region->meanColorBand_g (curryr region->meanColorBand 14))
+                   (region->meanColorBand_b (curryr region->meanColorBand 15)))
+              (list (band-map region->meanColorBand_r (first segmentation))
+                    (band-map region->meanColorBand_g (first segmentation))
+                    (band-map region->meanColorBand_b (first segmentation))))
+            (let ((band->meanColorBand (lambda (im_b st_b)
+                                         (band-map (lambda (region_id)
+                                                     (band-ref st_b 9 (inexact->exact (round region_id))))
+                                                   im_b))))
+              (map band->meanColorBand segmentation image_stats))))) 
+
+(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds-rg (ggradient (image->green img1) 2.0)) img1) 0.0) "img1 - watershed regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (make-list (length img1) (first (slic img1))) img1) 0.0) "img1 - slic regions")
 (show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
 
 (display "saving resulting images")(newline)
