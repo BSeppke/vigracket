@@ -209,7 +209,7 @@
               (map band->meanColorBand segmentation image_stats))))) 
 
 (show-image (regionimagetocrackedgeimage (meanColorImage (watersheds-rg (ggradient (image->green img1) 2.0)) img1) 0.0) "img1 - watershed regions")
-(show-image (regionimagetocrackedgeimage (meanColorImage (make-list (length img1) (first (slic img1))) img1) 0.0) "img1 - slic regions")
+(show-image (regionimagetocrackedgeimage (meanColorImage (slic img1) img1) 0.0) "img1 - slic regions")
 (show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
 
 (display "saving resulting images")(newline)
