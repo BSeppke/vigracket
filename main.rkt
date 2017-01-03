@@ -65,7 +65,9 @@
            image->list
            list->image
            image-map
+           image-map/unsafe
            image-map!
+           image-map!/unsafe
            image-for-each-index
            image-for-each-pixel
            image-reduce

@@ -271,21 +271,44 @@
   (map list->band lst))
 
 
+;; Do broadcasting of bands iff all channel sizes are equally large and some
+;; do just have one channel -> pump the single channels up!
+(define (band-broadcasting images)
+  (if (empty? images)
+      '()
+      (let* ((all_band_counts (map length images))
+             (max_band_count  (apply max all_band_counts))
+             (all_equal?      (andmap (disjoin (curry = 1) (curry = max_band_count)) all_band_counts)))
+        (if all_equal?
+            (if (> max_band_count 1)
+               (map (lambda (img) (if (= (length img) max_band_count)
+                                      img
+                                      (make-list max_band_count (car img))))
+                    images)
+               images)
+            (error "vigracket.helpers.band-broadcasting: Cannot broadcast bands for processing!")))))
+
 ; map a function (lambda (pixel_intensity 1 .. 2 .. 3 .. n) -> a_new_intensity)
 ;; band-wise to multiple images
-(define (image-map func . images)
+(define (image-map/unsafe func . images)
   (if (null? (car images))
       '()
       (cons (apply (curry band-map func) (map car images))
-            (apply (curry image-map func) (map cdr images)))))
+            (apply (curry image-map/unsafe func) (map cdr images)))))
+
+(define (image-map func . images)
+  (apply (curry image-map/unsafe func) (band-broadcasting images)))
 
 ; same as above but in-place!
 ; Changes the first given band in the list!
-(define (image-map! func . images)
+(define (image-map!/unsafe func . images)
   (if (null? (car images))
       '()
       (cons (apply (curry band-map! func) (map car images))
-            (apply (curry image-map! func) (map cdr images)))))
+            (apply (curry image-map!/unsafe func) (map cdr images)))))
+
+(define (image-map! func . images)
+  (apply (curry image-map!/unsafe func) (band-broadcasting images)))
 
   
 ; reduce for images
