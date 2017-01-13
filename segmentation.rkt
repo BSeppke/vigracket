@@ -282,6 +282,7 @@
   (if (and (= (length image) 3) (= (length labels) 1))
       (list (extractfeatures-rgb (first image) (second image) (third image) (first labels)))
       (map extractfeatures-band image labels max_label)))
+
 (provide 
            labelimage-band
            labelimage

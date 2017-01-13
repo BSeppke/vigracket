@@ -10,8 +10,9 @@
          vigracket/impex
          vigracket/imgproc
          vigracket/morphology
-         vigracket/segmentation
          vigracket/viewer)
+
+(require vigracket/segmentation)
  
 
 (provide 
@@ -237,6 +238,8 @@
            reflectimage
            fouriertransform-band
            fouriertransform
+           fouriertransforminverse-band
+           fouriertransforminverse
            fastcrosscorrelation-band
            fastcrosscorrelation
            fastnormalizedcrosscorrelation-band

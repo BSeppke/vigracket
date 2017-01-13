@@ -10,14 +10,15 @@
 
 (define vigra_resizeimage_c
   (get-ffi-obj 'vigra_resizeimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height width2 height2 resize_mode) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [width2 : _int]
-                     [height2 : _int]
-                     [resize_mode : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2  width height width2 height2 resize_mode)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [width2 : _int]
+                        [height2 : _int]
+                        [resize_mode : _int]
+                     -> [res :  _int])))
 
 (define (resizeimage-band  band width2 height2 [resize_mode 1])
   (let* ((width  (band-width  band))
@@ -44,7 +45,7 @@
                      [height : _int]
                      [angle : _float*]
                      [resize_mode : _int]
-                     -> (res :  _int))))
+                     -> [res :  _int])))
 
 (define (rotateimage-band band angle [resize_mode 1])
   (let* ((width  (band-width  band))
@@ -71,7 +72,7 @@
                      [width : _int]
                      [height : _int]
                      [resize_mode : _int]
-                     -> (res :  _int))))
+                     -> [res :  _int])))
 
 (define (affinewarpimage-band band affinematrix [resize_mode 1])
   (let* ((width  (band-width  band))
@@ -97,7 +98,7 @@
                      [width : _int]
                      [height : _int]
                      [reflect_mode : _int]
-                     -> (res :  _int))))
+                     -> [res :  _int])))
 
 (define (reflectimage-band band reflect_mode)
   (let* ((width  (band-width  band))
@@ -118,12 +119,13 @@
 
 (define vigra_fouriertransform_c
   (get-ffi-obj 'vigra_fouriertransform_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2   img_vector3  width height) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [img_vector3 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2   img_vector3  width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
 
 (define (fouriertransform-band band)
   (let* ((width  (band-width  band))
@@ -140,18 +142,47 @@
   (pivot-list (map fouriertransform-band image)))
 
 ;###############################################################################
+;###################     Inverse Fast Fourier Transform     ####################
+
+(define vigra_fouriertransforminverse_c
+  (get-ffi-obj 'vigra_fouriertransforminverse_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 img_vector4 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [img_vector4 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (fouriertransforminverse-band band_real band_imag)
+  (let* ((width  (band-width  band_real))
+	 (height (band-height band_real))
+	 (band3  (make-band width height 0.0))
+	 (band4  (make-band width height 0.0))
+	 (foo   (vigra_fouriertransforminverse_c (band-data band_real) (band-data band_imag) (band-data band3) (band-data band4) width height)))
+    (case foo
+      ((0) (list band3 band4))
+      ((1) (error "Error in vigracket.imgproc:fouriertransforminverse: Inverse FastFourier Transform of image failed!!")))))
+
+
+(define (fouriertransforminverse fft_image)
+  (pivot-list (map fouriertransforminverse-band (first fft_image) (second fft_image))))
+
+;###############################################################################
 ;###################       Fast Cross Correlation           ####################
 
 (define vigra_fastcrosscorrelation_c
   (get-ffi-obj 'vigra_fastcrosscorrelation_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 img_vector3 width height width2 height2) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [img_vector3 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [width2 : _int]
-                     [height2 : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2 img_vector3 width height width2 height2)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [width2 : _int]
+                        [height2 : _int]
+                     -> [res :  _int])))
 
 (define (fastcrosscorrelation-band band mask_band)
   (let* ((width  (band-width  band))
@@ -174,14 +205,15 @@
 
 (define vigra_fastnormalizedcrosscorrelation_c
   (get-ffi-obj 'vigra_fastnormalizedcrosscorrelation_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 img_vector3 width height width2 height2) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [img_vector3 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [width2 : _int]
-                     [height2 : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2 img_vector3 width height width2 height2)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [width2 : _int]
+                        [height2 : _int]
+                     -> [res :  _int])))
 
 (define (fastnormalizedcrosscorrelation-band band mask_band)
   (let* ((width  (band-width  band))
@@ -203,12 +235,13 @@
 
 (define vigra_localmaxima_c
   (get-ffi-obj 'vigra_localmaxima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height eight_connectivity) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [eight_connectivity : _bool]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2 width height eight_connectivity)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [eight_connectivity : _bool]
+                     -> [res :  _int])))
 
 (define (localmaxima-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
@@ -228,12 +261,13 @@
 
 (define vigra_localminima_c
   (get-ffi-obj 'vigra_localminima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height eight_connectivity) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [eight_connectivity : _bool]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2 width height eight_connectivity)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [eight_connectivity : _bool]
+                     -> [res :  _int])))
 
 (define (localminima-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
@@ -253,15 +287,16 @@
 
 (define vigra_subimage_c
   (get-ffi-obj 'vigra_subimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height left upper right lower) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [left : _int]
-                     [upper : _int]
-                     [right : _int]
-                     [lower : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2  width height left upper right lower)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [left : _int]
+                        [upper : _int]
+                        [right : _int]
+                        [lower : _int]
+                     -> [res :  _int])))
 
 (define (subimage-band band left upper right lower)
   (let* ((width  (band-width  band))
@@ -284,15 +319,16 @@
 
 (define vigra_paddimage_c
   (get-ffi-obj 'vigra_paddimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height left upper right lower) :: [img_vector1 : _cvector]
-                     [img_vector2 : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [left : _int]
-                     [upper : _int]
-                     [right : _int]
-                     [lower : _int]
-                     -> (res :  _int))))
+               (_fun (img_vector1 img_vector2  width height left upper right lower)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [left : _int]
+                        [upper : _int]
+                        [right : _int]
+                        [lower : _int]
+                     -> [res :  _int])))
 
 (define (paddimage-band band left upper right lower)
   (let* ((width  (band-width  band))
@@ -310,7 +346,7 @@
   (map (lambda (band) (paddimage-band band left upper right lower)) image))
 
 (provide
- resizeimage-band
+           resizeimage-band
            resizeimage
            rotateimage-band
            rotateimage
@@ -320,6 +356,8 @@
            reflectimage
            fouriertransform-band
            fouriertransform
+           fouriertransforminverse-band
+           fouriertransforminverse
            fastcrosscorrelation-band
            fastcrosscorrelation
            fastnormalizedcrosscorrelation-band

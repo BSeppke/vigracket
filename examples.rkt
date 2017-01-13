@@ -55,6 +55,8 @@
 (define  img3 (fouriertransform (loadimage (build-path vigracket-path "images/rect.gif"))))
 (define  img3magnitude (image-map magnitude  (first img3) (second img3)))
 
+(define  img3ifft (fouriertransforminverse img3))
+
 (display "testing rotation and reflection functions on image")(newline)
 (define  img4 (reflectimage img 3))
 (define  img5 (image-map cut-8bit (rotateimage img 15 3)))
@@ -246,6 +248,9 @@
 
 (saveimage img3magnitude (build-path save-path "images/rect-fft-magnitude.png"))
 (saveimage (image-map sqrt img3magnitude) (build-path save-path "images/rect-fft-sqrt-magnitude.png"))
+
+(saveimage (second img3ifft) (build-path save-path "images/rect-fft-ifft-real.png"))
+(saveimage (first  img3ifft) (build-path save-path "images/rect-fft-ifft-imag.png"))
 
 (saveimage img4    (build-path save-path "images/blox-reflected-both.png"))
 (saveimage img5    (build-path save-path "images/blox-rotated-15deg.png"))
