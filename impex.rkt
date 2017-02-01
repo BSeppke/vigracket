@@ -67,12 +67,39 @@
       ((3) (error "Error in vigracket.impex.loadrgbimage: Sizes do not match!")))))
 
 
+;###############                RGBA-Color images                  #############
+(define vigra_importrgbaimage_c
+  (get-ffi-obj 'vigra_importrgbaimage_c vigracket-dylib-path
+               (_fun (img_vector_r img_vector_g img_vector_b img_vector_a width height filename) :: [img_vector_r : _cvector]
+                     [img_vector_g : _cvector]
+                     [img_vector_b : _cvector]
+                     [img_vector_a : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [filename : _string]
+                     -> (res :  _int))))
+
+
+(define (loadrgbaimage filename)
+  (let* ((width (vigra_imagewidth_c filename))
+         (height (vigra_imageheight_c filename))
+	 (img (make-image width height 4 0.0 0.0 0.0 0.0))
+         (foo  (vigra_importrgbaimage_c (image-data img 0)  (image-data img 1)  (image-data img 2) (image-data img 3) width height filename)))
+   (case foo
+      ((0) img)
+      ((1) (error "Error in vigracket.impex.loadrgbaimage: Image cannot be loaded by vigra!"))
+      ((2) (error "Error in vigracket.impex.loadrgbaimage: Image is not RGBA colored"))
+      ((3) (error "Error in vigracket.impex.loadrgbaimage: Sizes do not match!")))))
+
+
 ;######    Generic (choose automatically if image is gray or colored)    #######
 (define (loadimage filename)
-  (case (vigra_imagenumbands_c filename)
-    ((1) (loadgrayimage filename))
-    ((3) (loadrgbimage filename))
-    (else  (error "Error in vigracket.impex.loadimage: Image has neither 1 nor 3 bands and thus cannot be loaded!"))))
+  (let ((band_count (vigra_imagenumbands_c filename)))
+    (case band_count
+      ((1) (loadgrayimage filename))
+      ((3) (loadrgbimage filename))
+      ((4) (loadrgbaimage filename))
+      (else  (error (format "Error in vigracket.impex.loadimage: Image has neither 1 nor 3 nor 4 bands (but ~a) and thus cannot be loaded!" band_count))))))
 
 (define load-image loadimage)
 (define image-load loadimage)

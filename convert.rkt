@@ -53,6 +53,30 @@
       ((0) argb-bytes)
       ((1) (error "Error in vigracket.convert.rgbimage->argb-bytes. Conversion failed!")))))
 
+(define vigra_convert_rgbabands_to_argb_c
+  (get-ffi-obj 'vigra_convert_rgbabands_to_argb_c vigracket-dylib-path
+               (_fun (img_vector_r img_vector_g img_vector_b img_vector_a argb_bytes width height) :: [img_vector_r : _cvector]
+                     [img_vector_g : _cvector]
+                     [img_vector_b : _cvector]
+                     [img_vector_a : _cvector]
+                     [argb_bytes : _bytes]
+                     [width : _int]
+                     [height : _int]
+                     -> (res :  _int))))
+
+(define (rgbaimage->argb-bytes image)
+  (let* ((r_band   (first  image))
+         (g_band   (second image))
+         (b_band   (third  image))
+         (a_band   (fourth  image))
+         (width  (band-width  r_band))
+         (height (band-height r_band))
+         (argb-bytes (make-bytes (* width height 4)))
+         (foo   (vigra_convert_rgbabands_to_argb_c (band-data r_band) (band-data g_band) (band-data b_band) (band-data a_band) argb-bytes width height)))
+    (case foo
+      ((0) argb-bytes)
+      ((1) (error "Error in vigracket.convert.rgbaimage->argb-bytes. Conversion failed!")))))
+
 (define (image->bitmap img [bitmap null])
   (let* ((w  (image-width img))
          (h  (image-height img))
@@ -68,15 +92,20 @@
        (begin
          (send bm set-argb-pixels 0 0 w h (rgbimage->argb-bytes img))
          bm))
+      ((4) ;;RedGreenBlueAlpha
+       (begin
+         (send bm set-argb-pixels 0 0 w h (rgbaimage->argb-bytes img))
+         bm))
       (else (error "Error in vigracket.convert.image->bitmap. Conversion only defined for rgb or grayscale images!")))))
 
 
 (define vigra_convert_argb_to_grayband_c
   (get-ffi-obj 'vigra_convert_argb_to_grayband_c vigracket-dylib-path
-               (_fun (argb-bytes img_vector width height) :: [argb-bytes : _bytes]
-                     [img_vector : _cvector]
-                     [width : _int]
-                     [height : _int]
+               (_fun (argb-bytes img_vector width height)
+                     :: [argb-bytes : _bytes]
+                        [img_vector : _cvector]
+                        [width : _int]
+                        [height : _int]
                      -> (res :  _int))))
 
 (define (argb-bytes->grayimage bytes image)
@@ -86,18 +115,36 @@
 
 (define vigra_convert_argb_to_rgbbands_c
   (get-ffi-obj 'vigra_convert_argb_to_rgbbands_c vigracket-dylib-path
-               (_fun (argb-bytes img_vector_r img_vector_g img_vector_b width height) :: [argb-bytes : _bytes]
-                     [img_vector_r : _cvector]
-                     [img_vector_g : _cvector]
-                     [img_vector_b : _cvector]
-                     [width : _int]
-                     [height : _int]
+               (_fun (argb-bytes img_vector_r img_vector_g img_vector_b width height)
+                     :: [argb-bytes : _bytes]
+                        [img_vector_r : _cvector]
+                        [img_vector_g : _cvector]
+                        [img_vector_b : _cvector]
+                        [width : _int]
+                        [height : _int]
                      -> (res :  _int))))
 
 (define (argb-bytes->rgbimage bytes image)
   (case (vigra_convert_argb_to_rgbbands_c  bytes (image-data image 0) (image-data image 1) (image-data image 2) (image-width image) (image-height image))
     ((0) image)
-    ((1) (error "Error in vigracket.convert.argb-bytes->grayimage. Conversion failed!"))))
+    ((1) (error "Error in vigracket.convert.argb-bytes->rgbimage. Conversion failed!"))))
+
+(define vigra_convert_argb_to_rgbabands_c
+  (get-ffi-obj 'vigra_convert_argb_to_rgbabands_c vigracket-dylib-path
+               (_fun (argb-bytes img_vector_r img_vector_g img_vector_b img_vector_a width height)
+                     :: [argb-bytes : _bytes]
+                        [img_vector_r : _cvector]
+                        [img_vector_g : _cvector]
+                        [img_vector_b : _cvector]
+                        [img_vector_a : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> (res :  _int))))
+
+(define (argb-bytes->rgbaimage bytes image)
+  (case (vigra_convert_argb_to_rgbbands_c  bytes (image-data image 0) (image-data image 1) (image-data image 2) (image-data image 3) (image-width image) (image-height image))
+    ((0) image)
+    ((1) (error "Error in vigracket.convert.argb-bytes->rgbaimage. Conversion failed!"))))
 
 (define (2htdp-image->bitmap 2htdp-image [bitmap null])
   (let* ((bm (if (empty? bitmap)
@@ -131,7 +178,27 @@
         ((2htdp-image? bitmap)    (bitmap->rgbimage (2htdp-image->bitmap bitmap) image))
         (else (error "vigracket.convert.bitmap->rgbimage: Only Racket bitmap% objects and 2htdp/images can be converted to vigracket images!"))))
 
-(define bitmap->image bitmap->rgbimage)
+(define (bitmap->rgbaimage bitmap [image null])
+  (cond ((is-a? bitmap bitmap%) (let* ((w (send bitmap get-width))
+                                       (h (send bitmap get-height))
+                                       (img  (if (empty? image)
+                                                 (make-image w h 4)
+                                                 image))
+                                       (bytes (make-bytes (* w h 4)))
+                                       (foo   (send bitmap get-argb-pixels 0 0 w h bytes)))
+                                  (argb-bytes->rgbaimage bytes img)))
+        ((2htdp-image? bitmap)    (bitmap->rgbaimage (2htdp-image->bitmap bitmap) image))
+        (else (error "vigracket.convert.bitmap->rgbaimage: Only Racket bitmap% objects and 2htdp/images can be converted to vigracket images!"))))
+
+(define (bitmap->image bitmap)
+  (if (send bitmap is-color?)
+      (if (send bitmap has-alpha-channel?)
+          ;; RGBA case:
+          (bitmap->rgbaimage bitmap)
+          ;; RGB case:
+          (bitmap->rgbimage bitmap))
+      ;;Gray case
+      (bitmap->grayimage bitmap)))
 
 (define image->plt-image image->bitmap)
 (define plt-image->image bitmap->rgbimage)
@@ -143,6 +210,7 @@
          bitmap->image
          bitmap->grayimage
          bitmap->rgbimage
+         bitmap->rgbaimage
          plt-image->image
          image->plt-image
          racket-image->image
