@@ -142,13 +142,33 @@
       ((0) #t)
       ((1) (error "Error in vigracket.impex.savergbimage: Image cannot be saved by vigra!")))))
 
+;###############            RGBA-Color/Alpha images               #############
+(define vigra_exportrgbaimage_c
+  (get-ffi-obj 'vigra_exportrgbaimage_c vigracket-dylib-path
+               (_fun (img_vector_r img_vector_g img_vector_b img_vector_a width height filename) :: [img_vector_r : _cvector]
+                     [img_vector_g : _cvector]
+                     [img_vector_b : _cvector]
+                     [img_vector_a : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [filename : _string]
+                     -> (res :  _int))))
+
+(define (savergbaimage image filename)
+  (let* ((foo  (vigra_exportrgbaimage_c (image-data image 0) (image-data image 1) (image-data image 2) (image-data image 3)
+                                    (image-width image) (image-height image) filename)))
+   (case foo
+      ((0) #t)
+      ((1) (error "Error in vigracket.impex.savergbaimage: Image cannot be saved by vigra!")))))
+
 
 ;######    Generic (choose automatically if image is gray or colored)    #######
 (define (saveimage image filename)
   (case (image-numbands image)
     ((1) (savegrayimage image filename))
     ((3) (savergbimage image filename))
-    (else  (error "Error in vigracket.impex.saveimage: Image has neither 1 nor 3 bands and thus cannot be saved!"))))
+    ((4) (savergbaimage image filename))
+    (else  (error "Error in vigracket.impex.saveimage: Image has neither 1 nor 3 nor 4 bands and thus cannot be saved!"))))
 
 (define image-save saveimage)
 (define save-image saveimage)

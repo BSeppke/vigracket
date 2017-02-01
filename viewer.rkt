@@ -23,11 +23,21 @@
       ;;for rgb-images
       ((3)(string-append "[ R:"
                          (real->decimal-string (image-ref image nx ny 0) 4)
-                       " G:"
-                       (real->decimal-string (image-ref image nx ny 1) 4)
-                       " B:"
-                       (real->decimal-string (image-ref image nx ny 2) 4)
-                       " ]")))))
+                         " G:"
+                         (real->decimal-string (image-ref image nx ny 1) 4)
+                         " B:"
+                         (real->decimal-string (image-ref image nx ny 2) 4)
+                         " ]"))
+      ;;for rgba-images
+      ((3)(string-append "[ R:"
+                         (real->decimal-string (image-ref image nx ny 0) 4)
+                         " G:"
+                         (real->decimal-string (image-ref image nx ny 1) 4)
+                         " B:"
+                         (real->decimal-string (image-ref image nx ny 2) 4)
+                         " A:"
+                         (real->decimal-string (image-ref image nx ny 3) 4)
+                         " ]")))))
 
 ;; Defines a class on the fly that overrides the callback for
 ;; mouse events in a canvas; you could name it,  if needed
