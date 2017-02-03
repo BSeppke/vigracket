@@ -252,9 +252,9 @@
       (error "Error in vigracket.helpers.image->blue-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
 
 (define (image->alpha-band image)
-  (if (<= 3 (image-numbands image) 4)
+  (if (<= (image-numbands image) 4)
       (image-band image 3)
-      (error "Error in vigracket.helpers.image->alpha-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
+      (error "Error in vigracket.helpers.image->alpha-band: Band extraction is only allowed for 4-channel RGBA images")))
 
 
 ; image -> channel images
