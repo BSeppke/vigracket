@@ -40,6 +40,11 @@
                          " ]"))
       (else ""))))
 
+;;Define background (for general display of RGBA data
+(define background-brush (new brush%))
+(send   background-brush set-color "lightgray")
+(send   background-brush set-style 'cross-hatch)
+
 ;; Defines a class on the fly that overrides the callback for
 ;; mouse events in a canvas; you could name it,  if needed
 (define image-canvas%
@@ -50,6 +55,12 @@
       (begin
           (when (boolean? racket_img)
             (set! racket_img (image->racket-image image)))
+          ;Background (only needed if RGBA image is displayed)
+          (when (= (length image) 4)
+            (begin
+              (send (send this get-dc) set-brush background-brush)
+              (send (send this get-dc) draw-rectangle 0 0 (image-width image) (image-height image))))
+          ;The image
           (send (send this get-dc) draw-bitmap racket_img 0 0)))
     ;; Key (and mouse wheel) Handler:
     ;  Arrow-Keys: move canvas (if possible)

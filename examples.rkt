@@ -52,7 +52,8 @@
                 0))
 
 (display "performing fft on image")(newline)
-(define  img3 (fouriertransform (loadimage (build-path vigracket-path "images/rect.gif"))))
+(define  img_rect (loadimage (build-path vigracket-path "images/rect.png")))
+(define  img3 (fouriertransform (image->alpha img_rect)))
 (define  img3magnitude (image-map magnitude  (first img3) (second img3)))
 
 (define  img3ifft (fouriertransforminverse img3))

@@ -237,19 +237,24 @@
 
 ; image -> channel bands
 (define (image->red-band image)
-  (if (= (image-numbands image) 3)
+  (if (<= 3 (image-numbands image) 4)
       (image-band image 0)
-      (error "Error in vigracket.helpers.image->red-band: Band extraction is only allowed for 3-channel RGB images")))
+      (error "Error in vigracket.helpers.image->red-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
 
 (define (image->green-band image)
-  (if (= (image-numbands image) 3)
+  (if (<= 3 (image-numbands image) 4)
       (image-band image 1)
-      (error "Error in vigracket.helpers.image->green-band: Band extraction is only allowed for 3-channel RGB images")))
+      (error "Error in vigracket.helpers.image->green-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
 
 (define (image->blue-band image)
-  (if (= (image-numbands image) 3)
+  (if (<= 3 (image-numbands image) 4)
       (image-band image 2)
-      (error "Error in vigracket.helpers.image->blue-band: Band extraction is only allowed for 3-channel RGB images")))
+      (error "Error in vigracket.helpers.image->blue-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
+
+(define (image->alpha-band image)
+  (if (<= 3 (image-numbands image) 4)
+      (image-band image 3)
+      (error "Error in vigracket.helpers.image->alpha-band: Band extraction is only allowed for 3(4)-channel RGB(A) images")))
 
 
 ; image -> channel images
@@ -261,6 +266,9 @@
 
 (define (image->blue image)
   (list (image->blue-band image)))
+
+(define (image->alpha image)
+  (list (image->alpha-band image)))
 
 ; image -> list of lists conversion
 (define (image->list image)

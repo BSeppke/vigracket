@@ -63,6 +63,8 @@
            image->green
            image->blue-band
            image->blue
+           image->alpha-band
+           image->alpha
            image->list
            list->image
            image-map
