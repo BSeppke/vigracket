@@ -142,7 +142,7 @@
                      -> (res :  _int))))
 
 (define (argb-bytes->rgbaimage bytes image)
-  (case (vigra_convert_argb_to_rgbbands_c  bytes (image-data image 0) (image-data image 1) (image-data image 2) (image-data image 3) (image-width image) (image-height image))
+  (case (vigra_convert_argb_to_rgbabands_c  bytes (image-data image 0) (image-data image 1) (image-data image 2) (image-data image 3) (image-width image) (image-height image))
     ((0) image)
     ((1) (error "Error in vigracket.convert.argb-bytes->rgbaimage. Conversion failed!"))))
 
