@@ -9,8 +9,8 @@ systems, more prerequisites are required.
 @section{Prerequisites}
 
 Before installing the vigracket module under any operating system other than Windows, please
-make sure, that you have the vigra computer vision library (version >= 1.11.0) already installed
-on your machine.
+make sure, that you have the vigra computer vision library (version >= 1.11.0) as well as the FFTW and
+FFTW-single library already installed on your machine.
 
 Unter macOS one of the easiest way to achieve this, is to download the MacPorts package manager
 from @url{http://macports.org}. After download and installation of MacPorts, you are able to install
