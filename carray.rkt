@@ -70,7 +70,7 @@
   (cvector-map! (lambda (x) val) (make-cvector type length)))
 
 ;; foldl function over one cvector...
-(define (cvector-foldl func cvec seed)
+(define (cvector-foldl func seed cvec)
   (let* ((length (cvector-length cvec))
          (reduce_var seed))
     (do ((i 0 (+ i 1)))
@@ -78,13 +78,16 @@
       (set! reduce_var  (func (cvector-ref/unsafe cvec i) reduce_var)))))
 
 ;; foldr function over one cvector...
-(define (cvector-foldr func cvec seed)
+(define (cvector-foldr func seed cvec)
   (let* ((length (cvector-length cvec))
          (reduce_var seed))
     (do ((i 0 (+ i 1)))
       ((= i length) reduce_var)
       (set! reduce_var  (func reduce_var (cvector-ref/unsafe cvec i))))))
-(define cvector-reduce cvector-foldr)
+
+;; reduce uses other argument order
+(define (cvector-reduce func cvec seed)
+  (cvector-foldr func seed cvec))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 

@@ -319,10 +319,18 @@
   (apply (curry image-map!/unsafe func) (band-broadcasting images)))
 
   
-; reduce for images
+; foldl and foldr for images
+(define (image-foldl func seed image)
+  (map (lambda (band) (band-foldl func seed band)) image))
+
+(define (image-foldr func seed image)
+  (map (lambda (band) (band-foldr func seed band)) image))
+
+; reduce with different argument order
 (define (image-reduce func image seed)
   (map (lambda (band) (band-reduce func band seed)) image))
-  
+
+
 ; apply a function (lambda (x y band_id) -> void)
 ; to an band in-place!
 (define (image-for-each-index func image)
