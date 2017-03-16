@@ -161,15 +161,16 @@
   (make-carray (apply (curry cvector-map func) (map carray-data carrays)) (carray-dimensions (car carrays))))
 
 ;; foldl a carray
-(define* (carray-foldl func arr seed)
-  (cvector-foldl func (carray-data arr) seed))
-
-;; reduce/foldr a carray
-(define* (carray-foldr func arr seed)
-  (cvector-foldr func (carray-data arr) seed))
+(define* (carray-foldl func seed arr)
+  (cvector-foldl func seed (carray-data arr)))
 
 ;; reduce a carray
-(define* carray-reduce carray-foldr)
+(define* (carray-foldr func seed arr)
+  (cvector-foldr func seed (carray-data arr)))
+
+;; reduce a carray
+(define* (carray-reduce func arr seed)
+  (cvector-reduce func (carray-data arr) seed))
 
 ;list->carray helpers: extract the dimension of a hierarchical array
 (define* (list->carray-dimensions xs)
