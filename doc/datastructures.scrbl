@@ -227,5 +227,5 @@ memory use is still within acceptable boundaries.
 @defproc[
  (matrix-mult [mat1 matrix?] [mat2 matrix?])
          matrix?]{
-  Uses the matrix multiplication to multily both matrices.
+  Uses the matrix multiplication to multiply both matrices.
 }

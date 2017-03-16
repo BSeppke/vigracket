@@ -46,7 +46,7 @@ This will copy the module to your local collects' path and build the bindings un
 After a successful installation you may use the vigracket module by including it into your own projects by
 typing:
 
-@code{(require vigracket)}
+@racketblock[(require vigracket)]
 
 To get an impression of the functionality, you may also open the shipped examples by opening the file "examples.rkt"
 in DrRacket and running it. 

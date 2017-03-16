@@ -104,14 +104,26 @@ some basic statistics for all of the regions:
 @racketblock[(define img_stats (extractfeatures img label_img))]
 
 Referring to the documentation of the above method for feature extraction, the values for mean red, green and blue
-intensity can be found in the coloums 13, 14, and 15 of the @code{img_stats} result. Each row indicates one region id.
-Thus, to get the mean intensity images from the label image and the statistics, we may write:
+intensity can be found in the colums 13, 14, and 15 of the @code{img_stats} result. Each row indicates one region id.
+Thus, to get the mean intensity images from the label image and the statistics, we may first define a accessor function
+for the feature statistics:
 
 @racketblock[
  (define (region->meanColorBand region_id col_id)
-         (image-ref img_stats col_id (inexact->exact (round region_id)) 0))
+         (image-ref img_stats col_id (inexact->exact (round region_id)) 0))]
 
- (define mean_color_img
+Using this access, we can define the mean color image using standard higher order mapping procedures:
+
+@racketblock[
+ (define meancolor_img
    (list (band-map  (curryr region->meanColorBand 13) (first segmentation))
          (band-map  (curryr region->meanColorBand 14) (first segmentation))
          (band-map  (curryr region->meanColorBand 15) (first segmentation))))]
+
+You may now want to have a look on the image, e.g. with crack edges beween the regions in black color:
+
+@racketblock[(show-image (regionimagetocrackedgeimage meancolor_img 0.0)
+                         "img - watershed regions (mean color)")]
+
+And you may also save the resulting image or do anything else with it. Please note, that this procedure only works
+for RGB images and a single label image (segmentation). Else, the indizes are not 13, 14, and 15 but stored band-wise.
