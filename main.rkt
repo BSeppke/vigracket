@@ -73,6 +73,8 @@
            image-map!/unsafe
            image-for-each-index
            image-for-each-pixel
+           image-foldl
+           image-foldr
            image-reduce
            image-while
            
