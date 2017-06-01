@@ -47,7 +47,7 @@ witing hdf5 and OpenEXR datasets.
 }
 
 @defproc[
- (save-image [image image?][filename string?])
+ (save-image [img image?][filename string?])
          boolean?]{
   Saves an image to the file system. Please not, that if you are not using the TIFF format, the values
  of the image's pixels may be rescaled. If the image already exists, it will be overwritten without warning.

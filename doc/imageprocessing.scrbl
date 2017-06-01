@@ -27,7 +27,7 @@ derive informations from the image like partial derivatives etc.
 @defmodule[vigracket/filters]
 
 @defproc[
- (convolveimage [image image?] [kernel_matrix matrix?])
+ (convolveimage [img image?] [kernel_matrix matrix?])
          image?]{
   Returns the result of the convolution of the image with the given kernel matrix. The kernel matrix should have
   an odd number of rows and columns. Note that this variant is slower than the separable variant for separable
@@ -35,7 +35,7 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (separableconvolveimage [image image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?])
+ (separableconvolveimage [img image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?])
          image?]{
   Returns the result of the convolution of the image with given kernel matrices for the horizontal and vertical convolution
   part. The @code{kernel_matrix_h} must have n (odd) rows and exactly one column, whereas the @code{kernel_matrix_v} must
@@ -43,20 +43,20 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (gsmooth [image image?] [scale number?])
+ (gsmooth [img image?] [scale number?])
          image?]{
   Performs a Gaussian smoothing of the image using a standard deviation of @code{scale}.
 }
 
 @defproc[
- (ggradient [image image?] [scale number?])
+ (ggradient [img image?] [scale number?])
          image?]{
   Computes the Gaussian gradient magitude of the image using a standard deviation of @code{scale} for the Gaussian first derivative
  convolution kernels.
 }
 
 @defproc[
- (gaussiangradient [image image?] [scale number?])
+ (gaussiangradient [img image?] [scale number?])
          (list-of image?)]{
   Computes the Gaussian gradient of the image using a standard deviation of @code{scale} for the Gaussian first derivative
  convolution kernels. The result is returned by a list containing two images. The first contains the partial derivatives in x-
@@ -64,13 +64,13 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (laplacianofgaussian [image image?] [scale number?])
+ (laplacianofgaussian [img image?] [scale number?])
          image?]{
   Performs an LoG of the image using a standard deviation of @code{scale}.
 }
 
 @defproc[
- (hessianmatrixofgaussian [image image?] [scale number?])
+ (hessianmatrixofgaussian [img image?] [scale number?])
          (list-of image?)]{
  Computes the second order Gaussian gradient of the image using a standard deviation of @code{scale} for the Gaussian second derivative
  convolution kernels. The result is returned by a list containing three images. The first contains the partial derivatives in xx-
@@ -78,31 +78,31 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (gsharpening [image image?] [sharpening_factor number?] [scale number?])
+ (gsharpening [img image?] [sharpening_factor number?] [scale number?])
          image?]{
   Performs a Gaussian sharpening of the image using a standard deviation of @code{scale} and a sharpening factor.
 }
 
 @defproc[
- (sharpening [image image?] [scale number?])
+ (sharpening [img image?] [scale number?])
          image?]{
   Performs a simple sharpening of the image using a scale of @code{scale} .
 }
 
 @defproc[
- (medianfilter [image image?] [window_width number?] [window_height number?])
+ (medianfilter [img image?] [window_width number?] [window_height number?])
          image?]{
   Performs a non-linear filtering by means of the median computation of the image using a window of given size.
 }
 
 @defproc[
- (nonlineardiffusion [image image?] [edge_threshold number?] [scale number?])
+ (nonlineardiffusion [img image?] [edge_threshold number?] [scale number?])
          image?]{
   Performs a non-linear filtering of the image using a scale of @code{scale} to preserve edges above the given threshold.
 }
 
 @defproc[
- (shockfilter [image image?] [sigma number?] [rho number?] [upwind_factor_h number?] [iterations number? 1])
+ (shockfilter [img image?] [sigma number?] [rho number?] [upwind_factor_h number?] [iterations number? 1])
          image?]{
   Performs a non-linear filtering of the image using a Ceherence Enhancing Shock Filtering at scale of @code{sigam}.
   For more information on this filter, read the original work at @url{http://www.mia.uni-saarland.de/Publications/weickert-dagm03.pdf}.
@@ -123,7 +123,7 @@ the VIGRA_C and thus the vigracket module. Here is an overview of the available 
 @defmodule[vigracket/tensors]
 
 @defproc[
- (structuretensor [image image?] [inner_scale number?] [outer_scale number?])
+ (structuretensor [img image?] [inner_scale number?] [outer_scale number?])
          (list-of image?)]{
  Computes the Structure Tensor of an image using Gaussian derivation kernels with a standard deviation of @code{inner_scale} and, afterwands,
  Gaussian smoothing kernels with a standard deviation of @code{outer_scale} for the integration part.
@@ -132,7 +132,7 @@ the VIGRA_C and thus the vigracket module. Here is an overview of the available 
 }
 
 @defproc[
- (boundarytensor [image image?] [scale number?])
+ (boundarytensor [img image?] [scale number?])
          (list-of image?)]{
  Computes the Boundary Tensor according to Köthe et al. using a scale of @code{scale}.
  The result is returned by a list containing three images. The first contains the xx-
@@ -140,7 +140,7 @@ the VIGRA_C and thus the vigracket module. Here is an overview of the available 
 }
 
 @defproc[
- (boundarytensor1 [image image?] [scale number?])
+ (boundarytensor1 [img image?] [scale number?])
          (list-of image?)]{
  Computes the Boundary Tensor according to Köthe et al. using a scale of @code{scale} but without the DC part.
  The result is returned by a list containing three images. The first contains the xx-
@@ -189,7 +189,7 @@ This chapter contains different image transformation algorithms.
 @defmodule[vigracket/imgproc]
 
 @defproc[
- (resizeimage [image image?] [new_width exact-number?] [new_height exact-number?] [resize_mode (in-list '(0 1 2 3 4)) 1])
+ (resizeimage [img image?] [new_width exact-number?] [new_height exact-number?] [resize_mode (in-list '(0 1 2 3 4)) 1])
          image?]{
   Resizes the image to new width and height.
   For the inter/extrpolation of the pixel's values, a resize mode may
@@ -197,7 +197,7 @@ This chapter contains different image transformation algorithms.
 }
 
 @defproc[
- (rotateimage [image image?] [angle number?] [resize_mode (in-list '(0 1 2 3 4)) 1])
+ (rotateimage [img image?] [angle number?] [resize_mode (in-list '(0 1 2 3 4)) 1])
          image?]{
   Rotate the image by means of a given angle.
   Does not change image dimensions!
@@ -206,7 +206,7 @@ This chapter contains different image transformation algorithms.
 }
 
 @defproc[
- (affinewarpimage [image image?] [affineMatrix matrix?] [resize_mode (in-list '(0 1 2 3 4)) 1])
+ (affinewarpimage [img image?] [affineMatrix matrix?] [resize_mode (in-list '(0 1 2 3 4)) 1])
          image?]{
   Affine tranforamtion of the image by means of a given transformation matrix.
   Does not change image dimensions!
@@ -215,34 +215,34 @@ This chapter contains different image transformation algorithms.
 }
 
 @defproc[
- (reflectimage [image image?] [reflect_mode (in-list '(1 2 3))])
+ (reflectimage [img image?] [reflect_mode (in-list '(1 2 3))])
          image?]{
   Reflects the image either along the horizontal axis (reflect_mode = 1),
   along the vertical axis (resize_mode = 2), or along both axes (resize_mode = 3).
 }
 
 @defproc[
- (subimage [image image?] [left number?] [upper number?] [right number?] [lower number?])
+ (subimage [img image?] [left number?] [upper number?] [right number?] [lower number?])
          image?]{
   Cuts a rectangular part out of an image and returns it by means of a new image. The upper left pixel is included,
   the lower right pixel is not.
 }
 
 @defproc[
- (paddimage [image image?] [left number?] [upper number?] [right number?] [lower number?])
+ (paddimage [img image?] [left number?] [upper number?] [right number?] [lower number?])
          image?]{
   Padds an image and returns it by means of a new image.
 }
 
 @defproc[
- (localminima [image image?] [eight_connectivity boolean? #t])
+ (localminima [img image?] [eight_connectivity boolean? #t])
          image?]{
   Finds the local minima of an image and returns another image, where only these are marked.
   If @code{eight_connectivity} is set to true (default) an eight-neighborhood is used to estimate minima, else
   a four-neighborhood. The search is performed band-wise.
 }
 @defproc[
- (localmaxima [image image?] [eight_connectivity boolean? #t])
+ (localmaxima [img image?] [eight_connectivity boolean? #t])
          image?]{
   Finds the local maxima of an image and returns another image, where only these are marked.
   If @code{eight_connectivity} is set to true (default) an eight-neighborhood is used to estimate maxima, else
@@ -253,7 +253,7 @@ The bindings to the Fast Fourier (and inverse) Transformation need the FFTW lib 
 on your system, too!
 
 @defproc[
- (fouriertransform [image image?])
+ (fouriertransform [img image?])
          (list-of image?)]{
   Uses the FFTW lib to compute the Fast Fourier Transform of an image. Returns a list of two images,
  where the first contains the real part and the second the imaginary part of the transformation.
@@ -272,14 +272,14 @@ Please note, that these also need the FFTW lib.
 
 
 @defproc[
- (fastcrosscorrelation [image image?] [template image?])
+ (fastcrosscorrelation [img image?] [template image?])
           image?]{
   Uses the Fast Fourier Transform to compute the non-normalized cross correlation between a given image
   and a (usually smaller) template.
 }
 
 @defproc[
- (fastnormalizedcrosscorrelation [image image?] [template image?])
+ (fastnormalizedcrosscorrelation [img image?] [template image?])
          image?]{
   Uses the Fast Fourier Transform to compute the normalized cross correlation correficient between a given image
   and a (usually smaller) template. The values in the result range from -1 to 1.
@@ -300,7 +300,7 @@ Since this special view is based on a spline interpolation, we refer to it as a 
 @defmodule[vigracket/splineimageview]
 
 @defproc[
- (create-splineimageview [image image?] [spline_order (in-list '(1 2 3 4 5))])
+ (create-splineimageview [img image?] [spline_order (in-list '(1 2 3 4 5))])
          SplineImageView?]{
   Creates a SplineImageView for a given image and spline order.
 }
@@ -411,34 +411,34 @@ operations may be performed.
 @defmodule[vigracket/morphology]
 
 @defproc[
- (distancetransform [image image?] [background_label __float] [norm (in-list '(0 1 2))])
+ (distancetransform [img image?] [background_label __float] [norm (in-list '(0 1 2))])
          image?]{
   Performs a distance transform on an image with a specific background intensity. Afterwards, each pixel contains
   the distance to the background w.r.t. the given distance norm (0 = checker board, 1 = Manhattan, 2  = Euclidean distance).
 }
 
 @defproc[
- (erodeimage [image image?] [radius exact-number?])
+ (erodeimage [img image?] [radius exact-number?])
          image?]{
   Performs a morphological erosion operation on a binary image using a given erosion radius.
 }
 
 @defproc[
- (dilateimage [image image?] [radius exact-number?])
+ (dilateimage [img image?] [radius exact-number?])
          image?]{
   Performs a morphological dilation operation on a binary image using a given dilation radius.
 }
 
 
 @defproc[
- (openingimage [image image?] [radius exact-number?])
+ (openingimage [img image?] [radius exact-number?])
          image?]{
   Performs a morphological opening operation (erosion then dilation) on a binary image using a given radius.
 }
 
 
 @defproc[
- (closingimage [image image?] [radius exact-number?])
+ (closingimage [img image?] [radius exact-number?])
          image?]{
   Performs a morphological closing operation (dilation then erosion) on a binary image using a given radius.
 }
@@ -460,14 +460,14 @@ foreground or background. Here, the union-find labelling can be used to get a la
 @defmodule[vigracket/segmentation]
 
 @defproc[
- (labelimage [image image?] [eight_connectivity boolean? #t])
+ (labelimage [img image?] [eight_connectivity boolean? #t])
          image?]{
   Performs a union-find labelling to assign unique labels to a e.g. binarized image. If eight_connectivity is set to true (default),
   the union-find algorithm will use the eight-neighborhood for component labelling.
 }
 
 @defproc[
- (watersheds-uf [image image?] [eight_connectivity boolean? #t])
+ (watersheds-uf [img image?] [eight_connectivity boolean? #t])
          image?]{
   Performs a union-find watershed segmentation approach, where each image minimum will correspont to one segment.
   To get meaningful results, apply this on the result of @code{(ggradient image)} instead of the image.
@@ -476,7 +476,7 @@ foreground or background. Here, the union-find labelling can be used to get a la
 }
 
 @defproc[
- (watersheds-rg [image image?] [eight_connectivity boolean? #t])
+ (watersheds-rg [img image?] [eight_connectivity boolean? #t])
          image?]{
   Performs a region-growing watershed segmentation approach, where each image minimum will correspont to one segment.
   To get meaningful results, apply this on the result of @code{(ggradient image)} instead of the image.
@@ -485,7 +485,7 @@ foreground or background. Here, the union-find labelling can be used to get a la
 }
 
 @defproc[
- (slic [image image?] [seedDistance number? 15] [intensityScaling number? 20.0] [iterations exact-number? 40])
+ (slic [img image?] [seedDistance number? 15] [intensityScaling number? 20.0] [iterations exact-number? 40])
          image?]{
   Performs a SLIC segmentation on the given image. The seedDistance controls the inital seed distribution on the image.
   The intensityScaling determined the rule of the image intensity over the geometrical distance. Eventually, the number
@@ -497,7 +497,7 @@ To get these, vigracket offers basic access to some of the most important region
 
 
 @defproc[
- (extractfeatures [image image?] [labels image?] [max_label (image-reduce max labels 0)])
+ (extractfeatures [img image?] [labels image?] [max_label (image-reduce max labels 0)])
          image?]{
   Determines the features for an image and a label image. The y-coordinate of the resulting image determines the region id,
   for which the features shall be queried. The features are computed in a band-wise manner if the number of bands for image and labels
@@ -531,7 +531,7 @@ For the visualization of a label image, a crack edge image may be appropriate. T
 and allows the explicit drawing of edges between the segments due to its increased size of (2 x width - 1, 2 x height -1):
 
 @defproc[
- (regionimagetocrackedgeimage [image image?] [marker number? 0.0])
+ (regionimagetocrackedgeimage [img image?] [marker number? 0.0])
          image?]{
   Creates a crack edge image representation of a segmentation and marks edges between the segments with the given intensity marker.
 }
@@ -539,14 +539,14 @@ and allows the explicit drawing of edges between the segments due to its increas
 Another view on segmentation is use edge dectors. Here, the vigracket module offers two famous edge detectors:
 
 @defproc[
- (cannyedgeimage [image image?] [scale number?] [gradient_threshold number?] [mark number?])
+ (cannyedgeimage [img image?] [scale number?] [gradient_threshold number?] [mark number?])
          image?]{
   Uses the Canny approach to find edges at a given scale, which are above a given gradient threshold. Returns an image, where all the found
   edgels are marked with the given marker value, else 0.
 }
 
 @defproc[
- (differenceofexponentialedgeimage [image image?] [scale number?] [gradient_threshold number?] [mark number?])
+ (differenceofexponentialedgeimage [img image?] [scale number?] [gradient_threshold number?] [mark number?])
          image?]{
   Uses the difference of exponential edge approach to find edges at a given scale, which are above a given gradient threshold. Returns an image, where all the found
   edgels are marked with the given marker value, else 0.
@@ -568,7 +568,7 @@ Most of the extensions can also be called for single bands. In this case, just u
 @defmodule[vigracket/helpers]
 
 @defproc[
- (image-map [func procedure?] [image image?] ... )
+ (image-map [func procedure?] [img image?] ... )
          image?]{
   Works like the map-function for lists, assuming that each image can be considered as a list of value lists. The count of images to pass
   to this function depends on the number of arguments of the function. E.g. @code{(image-map + img1 img2 img3)} adds three images together.
@@ -579,25 +579,25 @@ Most of the extensions can also be called for single bands. In this case, just u
 }
 
 @defproc[
- (image-map! [func procedure?] [image image?] ... )
+ (image-map! [func procedure?] [img image?] ... )
          image?]{
   Same as image-map, but stores the result in the first given image by overwriting the original image contents.
 }
 
 @defproc[
- (image-foldl [func procedure?] [seed any/c?] [image image?])
+ (image-foldl [func procedure?] [seed any/c?] [img image?])
          list?]{
   Works like the foldl-function for lists, assuming that each image can be considered as a list of value lists. This function works band-wise
   and applies the given function internally on each band of the image.
 }
 @defproc[
- (image-foldr [func procedure?] [seed any/c?] [image image?])
+ (image-foldr [func procedure?] [seed any/c?] [img image?])
          list?]{
   Works like the foldr-function for lists, assuming that each image can be considered as a list of value lists. This function works band-wise
   and applies the given function internally on each band of the image.
 }
 @defproc[
- (image-reduce [func procedure?] [image image?] [seed any/c?])
+ (image-reduce [func procedure?] [img image?] [seed any/c?])
          list?]{
   Same as @code{(image-foldr func seed image)}. Still there for compatibilty issues.
 }
@@ -605,21 +605,21 @@ Most of the extensions can also be called for single bands. In this case, just u
 Many algorithms work by means of an outer image traversal. To encapsulate this, the functional extension of vigracket has several supporting functions:
 
 @defproc[
- (image-for-each-index [func procedure?] [image image?])
+ (image-for-each-index [func procedure?] [img image?])
          void]{
   Calls a given procedure @code{func} with arguments x, y, band_id (e.g. @code{(lambda (x y band_id) (void))}) for every possible index (combination of x,y and band_id)
  of the given image. If the result shall be visible, the function @code{func} must use side-effects, e.g. by means of @code{image-set!}.
 }
 
 @defproc[
- (image-for-each-pixel [func procedure?] [image image?])
+ (image-for-each-pixel [func procedure?] [img image?])
          void]{
   Calls a given procedure @code{func} with arguments x, y, pixel_value (e.g. @code{(lambda (x y value) (void))}) for every possible pixel (combination of x,y)
  of the given image with the bands intensities listed. If the result shall be visible, the function @code{func} must use side-effects, e.g. by means of @code{image-set!}.
 }
 
 @defproc[
- (image-while [pred procedure?] [image image?])
+ (image-while [pred procedure?] [img image?])
          void]{
   Calls a given procedure @code{pred} with arguments x, y, pixel_value (e.g. @code{(lambda (x y value) #t)}) for every possible pixel (combination of x,y)
  of the given image with the bands intensities listed until the result of pred is false. If the result shall be persistent, the function @code{func} must use side-effects to store it.

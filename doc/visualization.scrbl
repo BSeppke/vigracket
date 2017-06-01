@@ -17,7 +17,7 @@ packages.
 @defmodule[vigracket/viewer]
 
 @defproc[
- (show-image [image image?] [window_title string? "vigracket Image Viewer"])
+ (show-image [img image?] [window_title string? "vigracket Image Viewer"])
  void]{
   Displays a given image in a new window. This viewer only works for 1-band (grey value) images
   and for 3/4-band RGB(A) images. Please note, that this viewer does not rescale the pixel values
@@ -55,7 +55,7 @@ image format into Racket's bitmap format.
 @defmodule[vigracket/convert]
 
 @defproc[
- (image->bitmap [image image?])
+ (image->bitmap [img image?])
  bitmap%]{
   Convert a given (vigracket) image to a Racket RGBA-bitmap. This only works for 1-band (grey value) images
   and for 3/4-band RGB(A) images. Please note, that this conversion does not rescale the pixel values

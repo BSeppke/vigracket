@@ -2,18 +2,19 @@ vigracket
 =========
 
 Use the power of the computer vision library VIGRA by means of the functional programming language Racket (former: Scheme). The interaction between both (c++ and functional) worlds is realized by using Racket's Foreign Function Interface (FFI) and the vigra_c wrapper library.
-This is the first release of the vigra-Racket bindings!
+This is the n-th release of the vigra-Racket bindings!
 
 
 1. Prerequisites
 -----------------------------------
 
-For Linux and Mac OS X, the vigra Computer Vision library needs to be installed. I recommend the use of a version > 1.9.0, but lower versions may also work. The easiest way to do so, is using your favorite package manager under linux or using MacPorts und  Mac OS X. Otherwise you need to pay attention to install all the needed dependencies on your own.
+For Linux and Mac OS X, the vigra Computer Vision library needs to be installed at version >=1.11.0. The easiest way to do so, is using your favorite package manager under linux or using MacPorts und  Mac OS X. Otherwise you need to pay attention to install all the needed dependencies on your own. For Mac OS X, I prefer the MacPorts package system. Using this, you can install all required prerequisites using:
+> sudo port install cmake vigra
 
 <b>Attention:</b> Under linux (Ubuntu) I encountered an installation problem of the vigra, such that `vigra-config --libs` pointed to a non-existing file. I was able to solve this by copying the necessary binary to the right position:
 > sudo cp /usr/local/lib/libvigraimpex.* /usr/lib/x86_64-linux-gnu
 
-Note, that for Windows, you also need to have installed the MS VC-Runtime (2010) in order to get these binaries running.
+Note, that for Windows, you also need to have installed the MS VC-Runtime (2015) in order to get these binaries running.
  
 2. Installation
 -----------------------------------

@@ -37,38 +37,38 @@ of an image.
 }
 
 @defproc[
- (image-width [image image?])
+ (image-width [img image?])
          integer?]{
   Returns the width of the first band of the image.
 }
 
 @defproc[
- (image-height [image image?])
+ (image-height [img image?])
          integer?]{
   Returns the height of the first band of the image.
 }
 @defproc[
- (image-numbands [image image?])
+ (image-numbands [img image?])
          integer?]{
   Returns the number of bands of the image. Same as @code{(length image)}.
 }
 
 @defproc[
- (image-band [image image?] [band_id integer?])
+ (image-band [img image?] [band_id integer?])
          carray?]{
   Returns a single band of an imageby means of the two dimensional @code{carray}. If the band_id is larger than the number
   of bands oth the image, an error is thrown. Same as @code{(list-ref image band_id)}.
 }
 
 @defproc[
- (image-data [image image?] [band_id integer?])
+ (image-data [img image?] [band_id integer?])
          cvector?]{
   Returns a single band of an image by means of a one dimensional (flat) foreign memory array. Width and height information is lost here.
 }
 
 
 @defproc[
- (image-ref [image image?]
+ (image-ref [img image?]
             [x (and (integer? x) (< -1 x (image-width image)))]
             [y (and (integer? y) (< -1 y (image-height image)))]
             [band_id integer? '()])
@@ -78,7 +78,7 @@ of an image.
 }
 
 @defproc[
- (image-set! [image image?]
+ (image-set! [img image?]
             [x (and (integer? x) (< -1 x (image-width image)))]
             [y (and (integer? y) (< -1 y (image-height image)))]
             [band_id-or-value (or integer?  (list-of __float))]
@@ -90,56 +90,56 @@ of an image.
 }
 
 @defproc[
- (copy-image [image image?])
+ (copy-image [img image?])
         image?]{
   Returns a copy of the given image with freshly allocated foreing memory.
 }
 
 @defproc[
- (image->red-band [image image?])
-         cvector?]{
+ (image->red-band [img image?])
+         carray?]{
   Returns the first band of the image, which is considered to contain the red intensities.
 }
 @defproc[
- (image->green-band [image image?])
-         cvector?]{
+ (image->green-band [img image?])
+         carray?]{
   Returns the second band of the image, which is considered to contain the green intensities.
 }
 @defproc[
- (image->blue-band [image image?])
-         cvector?]{
+ (image->blue-band [img image?])
+         carray?]{
   Returns the third band of the image, which is considered to contain the blue intensities.
 }
 @defproc[
- (image->alpha-band [image image?])
-         cvector?]{
+ (image->alpha-band [img image?])
+         carray?]{
   Returns the fourth band of the image, which is considered to contain the alpha/transparency intensities.
 }
 
 
 @defproc[
- (image->red [image image?])
+ (image->red [img image?])
          image?]{
   Returns a new image containing only the first band of the image, which is considered to contain the red intensities.
 }
 @defproc[
- (image->green [image image?])
+ (image->green [img image?])
          image?]{
  Returns a new image containing only the second band of the image, which is considered to contain the green intensities.
 }
 @defproc[
- (image->blue [image image?])
+ (image->blue [img image?])
          image?]{
   Returns a new image containing only the third band of the image, which is considered to contain the blue intensities.
 }
 @defproc[
- (image->alpha [image image?])
+ (image->alpha [img image?])
          image?]{
   Returns a new image containing only the fourth band of the image, which is considered to contain the alpha/transparency intensities.
 }
 
 @defproc[
- (image->list [image image?])
+ (image->list [img image?])
          (list-of (list-of list?))]{
   Returns a list of lists of lists containing all pixel intensities in Racket-managed memory.
   @bold{Please avoid this function for images, since is slows down algorithms drastically.
@@ -169,26 +169,26 @@ memory use is still within acceptable boundaries.
 }
 
 @defproc[
- (matrix-rows [matrix matrix?])
+ (matrix-rows [mat matrix?])
          integer?]{
   Returns the row count of the matrix.
 }
 
 @defproc[
- (matrix-cols [matrix matrix?])
+ (matrix-cols [mat matrix?])
          integer?]{
   Returns the column count of the matrix.
 }
 
 @defproc[
- (matrix-data [matrix matrix?])
+ (matrix-data [mat matrix?])
          cvector?]{
   Returns the matrix' data by means of a one dimensional (flat) foreign memory array. Row and column count information is lost here.
 }
 
 
 @defproc[
- (matrix-ref [matrix matrix?]
+ (matrix-ref [mat matrix?]
             [row (and (integer? row) (< -1 row (matrix-rows matrix)))]
             [col (and (integer? col) (< -1 col (matrix-cols matrix)))])
          __double]{
@@ -196,7 +196,7 @@ memory use is still within acceptable boundaries.
 }
 
 @defproc[
- (matrix-set! [matrix matrix?]
+ (matrix-set! [mat matrix?]
             [row (and (integer? row) (< -1 row (matrix-rows matrix)))]
             [col (and (integer? col) (< -1 col (matrix-cols matrix)))]
             [value __double])
@@ -206,13 +206,13 @@ memory use is still within acceptable boundaries.
 }
 
 @defproc[
- (copy-matrix [matrix matrix?])
+ (copy-matrix [mat matrix?])
         matrix?]{
   Returns a copy of the given matrix with freshly allocated foreing memory.
 }
 
 @defproc[
- (matrix->list [matrix matrix?])
+ (matrix->list [mat matrix?])
          (list-of (list-of number?))]{
   Returns a list of lists of values containing all matrix values in Racket-managed memory.
 }
