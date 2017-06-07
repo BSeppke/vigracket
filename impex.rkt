@@ -35,7 +35,7 @@
 (define (loadgrayimage filename)
   (let* ((width (vigra_imagewidth_c filename))
          (height (vigra_imageheight_c filename))
-	 (img (make-image width height 1 0.0))
+	 (img (make-image width height 1))
          (foo  (vigra_importgrayimage_c (image-data img 0) width height filename)))
    (case foo
       ((0) img)
@@ -58,7 +58,7 @@
 (define (loadrgbimage filename)
   (let* ((width (vigra_imagewidth_c filename))
          (height (vigra_imageheight_c filename))
-	 (img (make-image width height 3 0.0 0.0 0.0))
+	 (img (make-image width height 3))
          (foo  (vigra_importrgbimage_c (image-data img 0)  (image-data img 1)  (image-data img 2) width height filename)))
    (case foo
       ((0) img)
@@ -83,7 +83,7 @@
 (define (loadrgbaimage filename)
   (let* ((width (vigra_imagewidth_c filename))
          (height (vigra_imageheight_c filename))
-	 (img (make-image width height 4 0.0 0.0 0.0 0.0))
+	 (img (make-image width height 4))
          (foo  (vigra_importrgbaimage_c (image-data img 0)  (image-data img 1)  (image-data img 2) (image-data img 3) width height filename)))
    (case foo
       ((0) img)
