@@ -24,7 +24,7 @@
 	 (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix))
 	 (kernel_height (matrix-rows  kernel_matrix))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
          (foo     (vigra_convolveimage_c (band-data band) (matrix-data kernel_matrix)
                                          (band-data band2)
                                          width height kernel_width kernel_height)))
@@ -57,7 +57,7 @@
 	 (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix_h))
 	 (kernel_height (matrix-rows  kernel_matrix_v))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
          (foo     (vigra_separableconvolveimage_c (band-data band) (matrix-data kernel_matrix_h) (matrix-data kernel_matrix_v)
                                                   (band-data band2) 
                                                   width height kernel_width kernel_height)))
@@ -85,7 +85,7 @@
 (define (gsmooth-band band sigma)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_gaussiansmoothing_c (band-data band) (band-data band2) width height sigma)))
     (case foo
       ((0) band2)
@@ -111,8 +111,8 @@
 (define (gaussiangradient-band band sigma)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
-	 (band3   (make-band width height 0.0))
+	 (band2   (make-band width height))
+	 (band3   (make-band width height))
 	 (foo   (vigra_gaussiangradient_c (band-data band) (band-data band2) (band-data band3) width height sigma)))
     (case foo
       ((0) (list band2 band3))
@@ -136,7 +136,7 @@
 (define (ggradient-band band sigma)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_gaussiangradientmagnitude_c (band-data band) (band-data band2) width height sigma)))
     (case foo
       ((0) band2)
@@ -161,7 +161,7 @@
 (define (laplacianofgaussian-band band scale)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_laplacianofgaussian_c (band-data band) (band-data band2) width height scale)))
     (case foo
       ((0) band2)
@@ -188,9 +188,9 @@
 (define (hessianmatrixofgaussian-band band scale)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band_xx   (make-band width height 0.0))
-	 (band_xy   (make-band width height 0.0))
-	 (band_yy   (make-band width height 0.0))
+	 (band_xx   (make-band width height))
+	 (band_xy   (make-band width height))
+	 (band_yy   (make-band width height))
 	 (foo   (vigra_hessianmatrixofgaussian_c (band-data band) (band-data band_xx) (band-data band_xy) (band-data band_yy) width height scale)))
     (case foo
       ((0) (list band_xx band_xy band_yy))
@@ -215,7 +215,7 @@
 (define (gsharpening-band band sharpening_factor scale)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_gaussiansharpening_c (band-data band) (band-data band2) width height  sharpening_factor scale)))
     (case foo
       ((0) band2)
@@ -240,7 +240,7 @@
 (define (sharpening-band band sharpening_factor)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_simplesharpening_c (band-data band) (band-data band2) width height sharpening_factor)))
     (case foo
       ((0) band2)
@@ -266,7 +266,7 @@
 (define (medianfilter-band band window_width window_height)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height)))
     (case foo
       ((0) band2)
@@ -291,7 +291,7 @@
 (define (nonlineardiffusion-band band edge_threshold scale)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_nonlineardiffusion_c (band-data band) (band-data band2) width height edge_threshold scale)))
     (case foo
       ((0) band2)
@@ -318,7 +318,7 @@
 (define (shockfilter-band band sigma rho upwind_factor_h [iterations 1])
   (let* ((width  (band-width  band))
          (height (band-height band))
-         (band2  (make-band width height 0.0))
+         (band2  (make-band width height))
          (foo   (vigra_shockfilter_c (band-data band) (band-data band2) width height sigma rho upwind_factor_h iterations)))
     (case foo
       ((0) band2)

@@ -428,7 +428,7 @@
               (matrix-cols mat2))
            (= (matrix-cols mat1)
               (matrix-rows mat2)))
-        (let ((new-matrix (make-matrix (matrix-rows mat2) (matrix-cols mat1) 0.0)))
+        (let ((new-matrix (make-matrix (matrix-rows mat2) (matrix-cols mat1))))
           (do ((c 0 (+ c 1)))
             ((= c (matrix-cols mat1)) new-matrix)
             (do ((r 0 (+ r 1)))

@@ -23,7 +23,7 @@
 (define (resizeimage-band  band width2 height2 [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2  (make-band width2 height2 0.0))
+	 (band2  (make-band width2 height2))
 	 (foo    (vigra_resizeimage_c (band-data band) (band-data band2) width height width2 height2 resize_mode)))
     (case foo
       ((0) band2)
@@ -50,7 +50,7 @@
 (define (rotateimage-band band angle [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_rotateimage_c  (band-data band) (band-data band2) width height angle resize_mode)))
     (case foo
       ((0) band2)
@@ -77,7 +77,7 @@
 (define (affinewarpimage-band band affinematrix [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2  (make-band width height 0.0))
+	 (band2  (make-band width height))
 	 (foo    (vigra_affinewarpimage_c (band-data band) (matrix-data affinematrix) (band-data band2) width height resize_mode)))
     (case foo
       ((0) band2)
@@ -103,7 +103,7 @@
 (define (reflectimage-band band reflect_mode)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2  (make-band width height 0.0))
+	 (band2  (make-band width height))
 	 (foo    (vigra_reflectimage_c (band-data band) (band-data band2) width height reflect_mode)))
     (case foo
       ((0) band2)
@@ -130,8 +130,8 @@
 (define (fouriertransform-band band)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2  (make-band width height 0.0))
-	 (band3  (make-band width height 0.0))
+	 (band2  (make-band width height))
+	 (band3  (make-band width height))
 	 (foo   (vigra_fouriertransform_c (band-data band)  (band-data band2) (band-data band3) width height)))
     (case foo
       ((0) (list band2 band3))
@@ -158,8 +158,8 @@
 (define (fouriertransforminverse-band band_real band_imag)
   (let* ((width  (band-width  band_real))
 	 (height (band-height band_real))
-	 (band3  (make-band width height 0.0))
-	 (band4  (make-band width height 0.0))
+	 (band3  (make-band width height))
+	 (band4  (make-band width height))
 	 (foo   (vigra_fouriertransforminverse_c (band-data band_real) (band-data band_imag) (band-data band3) (band-data band4) width height)))
     (case foo
       ((0) (list band3 band4))
@@ -303,7 +303,7 @@
          (height (band-height band))
          (cut_width (- right left))
          (cut_height (- lower upper))
-         (band2  (make-band cut_width cut_height 0.0))
+         (band2  (make-band cut_width cut_height))
          (foo    (vigra_subimage_c (band-data band) (band-data band2) width height left upper right lower)))
     (case foo
       ((0) band2)

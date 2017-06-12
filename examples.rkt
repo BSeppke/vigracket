@@ -87,7 +87,11 @@
 (matrix-set! t2mat 0 2 (/ (image-width img) 2.0))
 (matrix-set! t2mat 1 2 (/ (image-width img) 2.0))
 
-(define  img5aff (image-map cut-8bit (affinewarpimage img (matrix-mult t1mat (matrix-mult rotmat t2mat)) 3)))
+(define tmat (matrix-mult t1mat (matrix-mult rotmat t2mat)))
+(matrix-set! tmat 2 0 0.0)
+(matrix-set! tmat 2 1 0.0)
+
+(define  img5aff (image-map cut-8bit (affinewarpimage img tmat 3)))
 
 (display "performing distance transform on canny edges of image")(newline)
  (define  img7 (distancetransform

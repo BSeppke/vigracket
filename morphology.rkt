@@ -22,7 +22,7 @@
 (define (distancetransform-band band background_label norm)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height 0.0))
+	 (band2   (make-band width height))
 	 (foo   (vigra_distancetransform_c (band-data band) (band-data band2) width height background_label norm)))
     (case foo
       ((0) band2)
@@ -47,7 +47,7 @@
 (define (erodeimage-band band radius)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2 (make-band width height 0.0))
+	 (band2 (make-band width height))
 	 (foo   (vigra_discerosion_c (band-data band) (band-data band2) width height radius)))
     (case foo
       ((0) band2)
@@ -72,7 +72,7 @@
 (define (dilateimage-band band radius)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2 (make-band width height 0.0))
+	 (band2 (make-band width height))
 	 (foo   (vigra_discdilation_c (band-data band) (band-data band2) width height radius)))
     (case foo
       ((0) band2)
@@ -118,7 +118,7 @@
 (define (upwindimage-band band signum_band radius)
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2 (make-band width height 0.0))
+	 (band2 (make-band width height))
 	 (foo   (vigra_upwindimage_c (band-data band) (band-data signum_band) (band-data band2) width height radius)))
     (case foo
       ((0) band2)
