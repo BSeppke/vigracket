@@ -68,28 +68,26 @@
 
 (define rotmat (make-matrix 3 3 0.0))
 (matrix-set! rotmat 0 0 (cos theta))
-(matrix-set! rotmat 1 1 (cos theta))
 (matrix-set! rotmat 0 1 (* -1 (sin theta)))
 (matrix-set! rotmat 1 0 (sin theta))
+(matrix-set! rotmat 1 1 (cos theta))
 (matrix-set! rotmat 2 2 1.0)
 
 (define t1mat (make-matrix 3 3 0.0))
 (matrix-set! t1mat 0 0 1.0)
 (matrix-set! t1mat 1 1 1.0)
 (matrix-set! t1mat 2 2 1.0)
-(matrix-set! t1mat 0 2 (/ (image-width img) -2.0))
-(matrix-set! t1mat 1 2 (/ (image-width img) -2.0))
+(matrix-set! t1mat 0 2 (/ (image-width img)  -2.0))
+(matrix-set! t1mat 1 2 (/ (image-height img) -2.0))
 
 (define t2mat (make-matrix 3 3 0.0))
 (matrix-set! t2mat 0 0 1.0)
 (matrix-set! t2mat 1 1 1.0)
 (matrix-set! t2mat 2 2 1.0)
-(matrix-set! t2mat 0 2 (/ (image-width img) 2.0))
-(matrix-set! t2mat 1 2 (/ (image-width img) 2.0))
+(matrix-set! t2mat 0 2 (/ (image-width img)  2.0))
+(matrix-set! t2mat 1 2 (/ (image-height img) 2.0))
 
 (define tmat (matrix-mult t1mat (matrix-mult rotmat t2mat)))
-(matrix-set! tmat 2 0 0.0)
-(matrix-set! tmat 2 1 0.0)
 
 (define  img5aff (image-map cut-8bit (affinewarpimage img tmat 3)))
 

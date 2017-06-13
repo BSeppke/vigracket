@@ -408,7 +408,7 @@
 ; and optional: initial value
 (define (make-matrix rows cols . init-val)
   (if (pair? init-val)
-      (make-carray matrix_cvalue_type (list rows cols)(car init-val) )
+      (make-carray matrix_cvalue_type (list rows cols)(car init-val))
       (make-carray matrix_cvalue_type (list rows cols) )))
   
 ; matrix-accessors - rows of matrix
@@ -449,7 +449,7 @@
               (matrix-cols mat2))
            (= (matrix-cols mat1)
               (matrix-rows mat2)))
-        (let ((new-matrix (make-matrix (matrix-rows mat2) (matrix-cols mat1))))
+        (let ((new-matrix (make-matrix (matrix-rows mat2) (matrix-cols mat1) 0.0)))
           (do ((c 0 (+ c 1)))
             ((= c (matrix-cols mat1)) new-matrix)
             (do ((r 0 (+ r 1)))

@@ -50,7 +50,7 @@
 (define (rotateimage-band band angle [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2   (make-band width height))
+	 (band2   (make-band width height 0.0))
 	 (foo   (vigra_rotateimage_c  (band-data band) (band-data band2) width height angle resize_mode)))
     (case foo
       ((0) band2)
@@ -77,7 +77,7 @@
 (define (affinewarpimage-band band affinematrix [resize_mode 1])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
-	 (band2  (make-band width height))
+	 (band2  (make-band width height 0.0))
 	 (foo    (vigra_affinewarpimage_c (band-data band) (matrix-data affinematrix) (band-data band2) width height resize_mode)))
     (case foo
       ((0) band2)
