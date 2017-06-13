@@ -220,7 +220,7 @@
          (height (band-height band))
          (mask_width  (band-width  mask_band))
          (mask_height (band-height mask_band))
-         (band2  (make-band width height 0.0))
+		 (band2 (make-band width height 0.0))
          (foo    (vigra_fastnormalizedcrosscorrelation_c (band-data band) (band-data mask_band) (band-data band2) width height mask_width mask_height)))
     (case foo
       ((0) band2)
@@ -272,7 +272,7 @@
 (define (localminima-band band [eight_connectivity #t])
   (let* ((width  (band-width  band))
          (height (band-height band))
-         (band2  (make-band width height 0.0))
+	 	 (band2 (make-band width height 0.0))
          (foo   (vigra_localminima_c (band-data band) (band-data band2) width height eight_connectivity)))
     (case foo
       ((0) band2)

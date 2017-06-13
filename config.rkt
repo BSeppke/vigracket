@@ -40,29 +40,32 @@
   (define cmake-flags (if (= racket-bits 32)
                           "-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32"
                           "-DCMAKE_BUILD_TYPE=Release"))
-  (if (or (equal? (system-type 'os) 'macosx)
-          (equal? (system-type 'os) 'unix))
-      (if (vigra-installed?)
-          ;;VIGRA is found! Try to compile vigra_c bindings
-          (begin 
-            (display "-------------- BUILDING VIGRA-C-WRAPPER FOR COMPUTER VISION AND IMAGE PROCESSING TASKS --------------")
-            (newline)
-            (current-directory vigra_c-path)
-            (if (system (string-append "mkdir build && cd build && cmake " cmake-flags " .. && make && cd .. && rm -rf ./build"))
-                (begin
-                  (copy-file (build-path (current-directory) "bin"  vigracket-dylib-file) vigracket-dylib-path #t)
-                  #t)
-                (error "making the vigra_c lib failed, although vigra seems to be installed")))
-          (error "Vigra is not found. Please check if the prefix path is set correctly in ~/.profile environment file!"))
-      ;;For windows: Just copy the correct binaries (no system called needed herein
-      (let ((bindir     (build-path vigra_c-path "bin" (string-append "win"(number->string racket-bits)))))
-        (if (equal? (system-type 'os) 'windows)
-            (let* ((binaries   (find-files (compose (curry equal?  #".dll") path-get-extension)  bindir))
-                   (result     (map (lambda (f) (copy-file f (path->string (build-path vigracket-path (file-name-from-path f))) #t)) binaries)))
-              (if (foldl (lambda (x y) (and x y)) #t result)
-                  #t
-                  (error (string-append "Copying of vigra_c's binaries from " (path->string bindir) " to "  (path->string vigracket-path) " failed !"))))
-            (error "Only windows, Mac OS X and Unix are supported!")))))
+  (begin
+    (if (or (equal? (system-type 'os) 'macosx)
+            (equal? (system-type 'os) 'unix))
+        (if (vigra-installed?)
+            ;;VIGRA is found! Try to compile vigra_c bindings
+            (begin 
+              (display "-------------- BUILDING VIGRA-C-WRAPPER FOR COMPUTER VISION AND IMAGE PROCESSING TASKS --------------")
+              (newline)
+              (current-directory vigra_c-path)
+              (if (system (string-append "mkdir build && cd build && cmake " cmake-flags " .. && make && cd .. && rm -rf ./build"))
+                  (begin
+                    (copy-file (build-path (current-directory) "bin"  vigracket-dylib-file) vigracket-dylib-path #t)
+                    #t)
+                  (error "making the vigra_c lib failed, although vigra seems to be installed")))
+            (error "Vigra is not found. Please check if the vigra-config tool is in the environment path!"))
+        ;;For windows: Just copy the correct binaries (no system called needed herein
+        (let ((bindir     (build-path vigra_c-path "bin" (string-append "win"(number->string racket-bits)))))
+          (if (equal? (system-type 'os) 'windows)
+              (let* ((binaries   (find-files (compose (curry equal?  #".dll") path-get-extension)  bindir))
+                     (result     (map (lambda (f) (copy-file f (path->string (build-path vigracket-path (file-name-from-path f))) #t)) binaries)))
+                (if (foldl (lambda (x y) (and x y)) #t result)
+                    #t
+                    (error (string-append "Copying of vigra_c's binaries from " (path->string bindir) " to "  (path->string vigracket-path) " failed !"))))
+              (error "Only windows, Mac OS X and Unix are supported!"))))
+    ;;If it still fails loading -> give up and inform the user
+    (void (ffi-lib vigracket-dylib-path #:fail (lambda() (error "The vigra_c (still) cannot be loaded after one rebuild phase"))))))
 
 
 ;; For Windows: Add the dll directory to the systems path:
@@ -75,6 +78,7 @@
 
 ;;Try to load the dylib: If this fails - try to rebuild it!
 (void (ffi-lib vigracket-dylib-path #:fail rebuild-vigracket))
+
 
 (provide vigracket-path
          vigracket-version

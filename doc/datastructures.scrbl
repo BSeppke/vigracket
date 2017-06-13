@@ -96,6 +96,13 @@ of an image.
 }
 
 @defproc[
+ (initimage [img image?] [value __float?] ...)
+        image?]{
+  Sets all pixels of the given image to the values and returns the initialized image. Does work in-place!
+  As an example, to re-initialize a three band RGB-image @code{img} with zeros, you might call @code{(initimage img 0.0 0.0 0.0)}.
+}
+
+@defproc[
  (image->red-band [img image?])
          carray?]{
   Returns the first band of the image, which is considered to contain the red intensities.

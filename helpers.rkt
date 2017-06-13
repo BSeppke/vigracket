@@ -1,5 +1,6 @@
 #lang racket
 
+(require vigracket/config)
 (require vigracket/carray)
 (require scheme/foreign)
 (require ffi/unsafe)
@@ -43,11 +44,31 @@
 
 ;########################## Band specific functions ############################
 
+;###############################################################################
+;###################          Image initialization          ####################
+(define (initimage-band band value)
+  (define vigra_initimage_c 
+          (get-ffi-obj 'vigra_initimage_c vigracket-dylib-path
+               (_fun (img_vector width height value) :: [img_vector : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [value : _float*]
+                     -> (res :  _int))))
+  (let* ((width  (band-width  band))
+	     (height (band-height band))
+         (foo     (vigra_initimage_c (band-data band) width height value)))
+    (case foo
+      ((0) band)
+      ((1) (error "Error in vigracket.filters.initimage: Initialization with value failed!")))))
+
+(define (initimage image . values)
+  (map initimage-band image values))
+  
 ; create a band from width/height
-; and optional: initial value
+; and optional: initial value -> uses the fast initimage-band function
 (define (make-band width height . init-val)
   (if (pair? init-val)
-      (make-carray band_cvalue_type (list width height)(car init-val) )
+      (initimage-band (make-carray band_cvalue_type (list width height)) (car init-val))
       (make-carray band_cvalue_type (list width height) )))
 
 ; band accessor: data (cvector) of an band
@@ -148,7 +169,7 @@
 ;######################### Image specific functions ############################
 
 ; create an image from width/height
-; and optional: initial color
+; and optional: initial color -> mapped using fast initimage-band function in make-band
 (define (make-image width height numBands . init-val)
   (if (= numBands 0)
       '() 
