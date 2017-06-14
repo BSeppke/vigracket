@@ -65,21 +65,6 @@
       #f
       (apply (curry cvector-map! func) (cons (copy-cvector (car cvecs)) (cdr cvecs)))))
 
-;; make a cvector, fills with an initial value
-;; Do not use for large cvectors -> use initimage-band instead!
-(define (make-cvector-init type length val)
-  (let* [(result (make-cvector type length))
-          (ptr   (cvector-ptr result))]
-        ;;If val == zero: use memset!
-	(if (= val 0.0)
-		(begin 
-		   (memset ptr 0 length type)
-		   result)
-		;;else: set manually
-    	(do ((i 0 (+ i 1)))
-      		((= i length) result)
-      			(ptr-set! ptr type i val)))))
-
 ;; foldl function over one cvector...
 (define (cvector-foldl func seed cvec)
   (let* ((length (cvector-length cvec))
@@ -114,15 +99,13 @@
   
 
 ;; Constructor for carrays (with given type, a list containing
-;; the dimensions of the resulting array, and an initial value
-;; for each element.
+;; the dimensions of the resulting array
 (provide carray? carray-data carray-dimensions 
          (rename-out [allocate-carray make-carray]))
 
-(define (allocate-carray type dimensions . init-val)
-  (if (null? init-val)
-      (make-carray (make-cvector type (apply * dimensions)) dimensions)
-      (make-carray (make-cvector-init type (apply * dimensions) (car init-val)) dimensions)))
+(define (allocate-carray type dimensions)
+  (make-carray (make-cvector type (apply * dimensions))
+               dimensions))
 
 ;; Accessor for the type of the carray
 (define* (carray-type arr) 

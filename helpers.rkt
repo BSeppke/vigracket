@@ -44,31 +44,26 @@
 
 ;########################## Band specific functions ############################
 
-;###############################################################################
-;###################          Image initialization          ####################
-(define (initimage-band band value)
-  (define vigra_initimage_c 
-          (get-ffi-obj 'vigra_initimage_c vigracket-dylib-path
-               (_fun (img_vector width height value) :: [img_vector : _cvector]
-                     [width : _int]
-                     [height : _int]
-                     [value : _float*]
-                     -> (res :  _int))))
-  (let* ((width  (band-width  band))
-	     (height (band-height band))
-         (foo     (vigra_initimage_c (band-data band) width height value)))
-    (case foo
+; Image band initialization with arbitrary values
+(define (init-band band value)
+  (let* [(vigra_init_float_array_c
+          (get-ffi-obj 'vigra_init_float_array_c
+                       vigracket-dylib-path
+                       (_fun (cvec size value)
+                             :: [cvec  : _cvector]
+                                [size  : _int]
+                                [value : _float*]
+                             -> [res   :  _int])))
+         (cvec (band-data band))]
+    (case (vigra_init_float_array_c cvec (cvector-length cvec) value)
       ((0) band)
-      ((1) (error "Error in vigracket.filters.initimage: Initialization with value failed!")))))
+      ((1) (error "Initialization of an image band with a value failed!")))))
 
-(define (initimage image . values)
-  (map initimage-band image values))
-  
 ; create a band from width/height
 ; and optional: initial value -> uses the fast initimage-band function
 (define (make-band width height . init-val)
   (if (pair? init-val)
-      (initimage-band (make-carray band_cvalue_type (list width height)) (car init-val))
+      (init-band (make-carray band_cvalue_type (list width height)) (car init-val))
       (make-carray band_cvalue_type (list width height) )))
 
 ; band accessor: data (cvector) of an band
@@ -168,6 +163,10 @@
 
 ;######################### Image specific functions ############################
 
+;;Map band initialization with arbitrary values to images
+(define (initimage image . values)
+  (map init-band image values))
+  
 ; create an image from width/height
 ; and optional: initial color -> mapped using fast initimage-band function in make-band
 (define (make-image width height numBands . init-val)
@@ -403,13 +402,27 @@
 ;## In addition a  matrix multiplication is avail.   ##
 ;######################################################
 
+; Image band initialization with arbitrary values
+(define (init-matrix mat value)
+  (let* [(vigra_init_double_array_c
+          (get-ffi-obj 'vigra_init_double_array_c
+                       vigracket-dylib-path
+                       (_fun (cvec size value)
+                             :: [cvec  : _cvector]
+                                [size  : _int]
+                                [value : _double*]
+                             -> [res   :  _int])))
+         (cvec (matrix-data mat))]
+    (case (vigra_init_double_array_c cvec (cvector-length cvec) value)
+      ((0) mat)
+      ((1) (error "Initialization of a matrix with a value failed!")))))
 
-; creation of an image from width/height 
+; creation of a matrix from rows/columns 
 ; and optional: initial value
 (define (make-matrix rows cols . init-val)
   (if (pair? init-val)
-      (make-carray matrix_cvalue_type (list rows cols)(car init-val))
-      (make-carray matrix_cvalue_type (list rows cols) )))
+      (init-matrix (make-carray matrix_cvalue_type (list rows cols)) (car init-val))
+      (make-carray matrix_cvalue_type (list rows cols))))
   
 ; matrix-accessors - rows of matrix
 (define (matrix-rows mat)

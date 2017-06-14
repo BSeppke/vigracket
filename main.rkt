@@ -190,8 +190,6 @@
            siv-g2yy
            
            ;;vigracket.filters
-           initimage-band
-           initimage
            convolveimage-band
            convolveimage
            separableconvolveimage-band

@@ -328,9 +328,7 @@
 (define (shockfilter image sigma rho upwind_factor_h [iterations 1])
   (map (lambda (band) (shockfilter-band band sigma rho upwind_factor_h iterations)) image))
 
-(provide   initimage-band
-           initimage
-           convolveimage-band
+(provide   convolveimage-band
            convolveimage
            separableconvolveimage-band
            separableconvolveimage
