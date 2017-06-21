@@ -17,6 +17,7 @@
 
 ;; The compilation routine (at least for macosx and unix)
 (define (rebuild-vigracket)
+  (define old_path (current-directory))
   (define vigra_c-path (build-path vigracket-path "vigra_c"))
   (define (vigra-version)
     (let* ((version_string
@@ -53,7 +54,8 @@
                   (begin
                     (copy-file (build-path (current-directory) "bin"  vigracket-dylib-file) vigracket-dylib-path #t)
                     #t)
-                  (error "making the vigra_c lib failed, although vigra seems to be installed")))
+                  (error "making the vigra_c lib failed, although vigra seems to be installed"))
+              (current-directory old_path))
             (error "Vigra is not found. Please check if the vigra-config tool is in the environment path!"))
         ;;For windows: Just copy the correct binaries (no system called needed herein
         (let ((bindir     (build-path vigra_c-path "bin" (string-append "win"(number->string racket-bits)))))

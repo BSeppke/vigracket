@@ -14,7 +14,7 @@
          (begin
            (display "=== Important notes for Windows ===")(newline)
            (display "Please make sure to install the MS Visual C++ 2015 runtimes first!")(newline)
-           (display "You may get them from: https://www.microsoft.com/en-us/download/details.aspx?id=48145")))         
+           (display "You may get them from: https://www.microsoft.com/en-us/download/details.aspx?id=48145")(newline)))         
         ((equal? (system-type 'os) 'macosx)
          (begin
            (display "=== Important notes for Max OS X ===")(newline)
@@ -22,14 +22,14 @@
            (display "After the installation of MacPorts, install CMake and vigra by typing:")(newline)
            (display "    sudo port install cmake")(newline)
            (display "    sudo port install vigra")(newline)
-           (display "The wrapper library vigra_c will be build on the first load of the vigracket module!")))   
+           (display "The wrapper library vigra_c will be build on the first load of the vigracket module!")(newline)))   
         ((equal? (system-type 'os) 'unix)
          (begin
            (display "=== Important notes for Linux ===")(newline)
            (display "Please make sure to install the vigra (version >= 1.11.0) first!")(newline)
            (display "You may get the latest version of the vigra from github using:")(newline)
            (display "    git clone https://github.com/ukoethe/vigra")(newline)
-           (display "The wrapper library vigra_c will be build on the first load of the vigracket module!")))))
+           (display "The wrapper library vigra_c will be build on the first load of the vigracket module!")(newline)))))
 
 (define (install-vigracket)
   (begin

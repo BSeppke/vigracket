@@ -1,7 +1,6 @@
 #lang racket
 
 ;Always the first step: load the VigRACKET lib
-
 (require vigracket)
 
 (define magnitude 
