@@ -33,6 +33,7 @@ The installation of the vigracket-bindings is quite easy. Just unzip the complet
 If you want to use the git master branch, you will need to sync the included vigra_c submodule by typing:
 > git clone https://github.com/bseppke/vigracket
 > cd vigracket
+> git submodule init
 > git submodule update --remote
 
 Inside the vigracket-directory you will find a file called "install.rkt". Open this file in DrRacket and execute it once. This will copy the vigracket files to the local collects directory.
