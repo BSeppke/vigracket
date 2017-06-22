@@ -28,7 +28,9 @@ Use your package manager, to install the libvigra-dev package. If this package i
 ##### For Mac OS X
 I prefer the MacPorts package system. You may download it from https://macports.org. 
 After the installation, you can install all required prerequisites using:
+
 > sudo port install cmake
+
 > sudo port install vigra
 
 ##### For Windows
