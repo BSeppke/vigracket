@@ -88,7 +88,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; 
 ;;;                                                                          ;;;
-;;;          INTRODUCTION OF AN ARRAY TYPE "CARRRAY" BASED ON CVECTORS       ;;;
+;;;          INTRODUCTION OF AN ARRAY TYPE "CARRAY" BASED ON CVECTORS       ;;;
 ;;;                                                                          ;;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -177,7 +177,7 @@
 ;;list->carray: converts a hierarchical list into a multidimensional array
 (define* (list->carray xs type) 
   (make-carray (list->cvector (flatten xs) type)
-                    (list->carray-dimensions xs)))
+               (list->carray-dimensions xs)))
   
 
 ;; carray->list helpers: convert a carray into a flat list

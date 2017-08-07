@@ -12,6 +12,154 @@ Although generally multi-dimensional, we only use the two dimensional specializa
 to implement all of the data structures described below. To keep the memory use as low as possible, we
 do not store a non-foreign copy of the data structures.
 
+@section{CArrays}
+@defmodule[vigracket/carray]
+
+The common use of the @code{vigra_c} wrapper-library is as follows: Allocate memory on client-side (here: Racket),
+execute the function on the server side (C/C++), and then return the previously allocated datastructures by 
+means of an images. Thus, we need an array-like datastructure, which is allocated by Racket by accessible in
+so-called foreign-memory space (more-or-less global valid pointer).
+
+For flat arrays, the Racket type @code{cvector} fulfilles these requirements, since it combines a pointer,
+and data type and a length of the array with construction and destruction in foreign memory.
+However, since we are dealing with images, we need a proper 2D interpretation of this flat field.
+Here, the @code{carray} data type comes into play, enriching the @code{cvector} data type with an n-dimensional
+shape and n-dimensional access operations.
+
+@defproc[
+ (make-carray [type ctype?]
+              [dimensions (list-of integer?)])
+         carray?]{
+  Returns a carray of a given ffi c-type and a given size (dimensions). The carray will be allocated with an overall size of
+  @code{(apply * dimensions)}.
+  
+  Example: to allocate a 2D-array of type @code{_float} and a size of @code{100x200} write: 
+  @code{(define carr (make-carray _float '(100 200)))}.
+}
+
+@defproc[
+ (carray-type [carray carray?])
+       ctype?]{
+ Returns the @code{ctype} of the given carray. For image-bands, this is always @code{_float}, for matrices: @code{_double}.
+}
+ 
+@defproc[
+ (carray-dimensions [carray carray?])
+       (list-of integer?)]{
+ Returns the n-dimensional shape of this @code{carray} by means of a list with n integers.
+}
+  
+@defproc[
+ (carray-index [pos (list-of integer?)]
+               [dimensions (list-of integer?)])
+        integer?]{
+ Returns the flat line-scan index for the n-dimensional position and shape of a @code{carray} as a single integer.
+ Example:
+ 
+ @code{(carray-index '(1 1 1) '(10 20 30)) = 1 + 1*10 + 1*(10*20) = 211}
+
+ This function is used to allow access to the underlying flat data of an @code{carray}.
+}
+
+@defproc[
+ (carray-ref [arr carray?]
+             [pos (list-of integer?)])
+         ctype?]{
+  Returns the value of the @code{carray} at the n-dimensional position @code{pos}. Will throw an error, if the given
+  position is out of range of the shape of the given array. Might be slow due to the checking, but safe!
+}
+
+@defproc[
+ (carray-ref/unsafe [arr carray?]
+                    [pos (list-of integer?)])
+         ctype?]{
+ Returns the value of the @code{carray} at the n-dimensional position @code{pos}, but does not check if the index is inside
+ the bounds of the array's dimensions. If an invalid index is given, the behaviour will be undefined - from reading different
+ memory content up to a crash.
+}
+
+@defproc[
+ (carray-set! [arr carray?]
+              [pos (list-of integer?)]
+              [val ctype?])
+         void?]{
+  Sets the value of the @code{carray} at the n-dimensional position @code{pos} to @code{val}. Will throw an error, if the given
+  position is out of range of the shape of the given array. Might be slow due to the checking, but safe!
+}
+
+@defproc[
+ (carray-set/unsafe! [arr carray?]
+                     [pos (list-of integer?)]
+                     [val ctype?])
+         void?]{
+ Sets the value of the @code{carray} at the n-dimensional position @code{pos} to @code{val}, but does not check if the index is inside
+ the bounds of the array's dimensions. If an invalid index is given, the behaviour will be undefined - from setting different
+ memory content up to a crash.
+}
+
+@defproc[
+ (copy-carray [arr carray?])
+        carray?]{
+  Returns a copy of the given @code{carray} with freshly allocated foreign memory.
+}
+
+
+@defproc[
+ (carray-map [func procedure?] [arr carray?] ... )
+         carray?]{
+  Works like the map-function for lists, assuming that each carray can be considered as a list of value lists. The count of carrays to pass
+  to this function depends on the number of arguments of the function. E.g. @code{(carray-map + arr1 arr2 arr3)} adds three carrays together.
+  This function always allocates new foreign memory and does not manipulate the input carrays.
+}
+
+@defproc[
+ (carray-map! [func procedure?] [arr carray?] ... )
+         carray?]{
+  Same as carray-map, but stores the result in the first given carray by overwriting the original carray's contents.
+}
+
+@defproc[
+ (carray-foldl [func procedure?] [seed any/c?] [arr carray?])
+         ctype?]{
+  Works like the foldl-function for lists, assuming that each carray can be considered as a list of value lists.
+}
+@defproc[
+ (carray-foldr [func procedure?] [seed any/c?] [arr carray?])
+         ctype?]{
+  Works like the foldr-function for lists, assuming that each carray can be considered as a list of value lists.
+}
+@defproc[
+ (carray-reduce [func procedure?] [arr carray?] [seed any/c?])
+         ctype?]{
+  Same as @code{(carray-foldr func seed carray)}. Still there for compatibilty issues.
+}
+
+
+@defproc[
+ (carray->list [arr carray?])
+         (list-of ... (list-of ctype?))]{
+  Returns an n-dimensional list containing all values of the Racket-managed memory.
+  @bold{Please avoid this function for carrays, since is slows down algorithms drastically.
+  Use the high-order functional programming interface instead!}
+}
+
+@defproc[
+ (list->carray [list (list-of ... (list-of ctype?))])
+         carray?]{
+  Given an n-dimensional lists of lists containing all values in Racket-managed memory,
+  this allocates a @code{carray} and fills it with the provided values.
+  @bold{Please avoid this function for carrays, since is slows down algorithms drastically.
+  Use the high-order functional programming interface instead!}
+}
+
+
+
+
+
+
+
+
+
 @section{Images}
 
 Images are modeled as lists. Each list item is one two dimensional @code{carray} of value type @code{_float}. For most 
@@ -92,7 +240,7 @@ of an image.
 @defproc[
  (copy-image [img image?])
         image?]{
-  Returns a copy of the given image with freshly allocated foreing memory.
+  Returns a copy of the given image with freshly allocated foreign memory.
 }
 
 @defproc[
@@ -156,10 +304,68 @@ of an image.
 @defproc[
  (list->image [list (list-of (list-of list?))])
          image?]{
-  Given a list of lists of lists containing all pixel intensities in Racket-managed memory this allocated a new image and fills it with the
+  Given a list of lists of lists containing all pixel intensities in Racket-managed memory, this allocates a new image and fills it with the
   intensity values provided.
   @bold{Please avoid this function for images, since is slows down algorithms drastically.
   Use the high-order functional programming interface instead!}
+}
+
+@defproc[
+ (image-map [func procedure?] [img image?] ... )
+         image?]{
+  Works like the map-function for lists, assuming that each image can be considered as a list of value lists. The count of images to pass
+  to this function depends on the number of arguments of the function. E.g. @code{(image-map + img1 img2 img3)} adds three images together.
+  This function always allocates new foreign memory and does not manipulate the input images.
+  Unlike the basic mapping function, this function establishes band-broadcasting and may thus be used to combine multi- and single band images.
+  E.g. it is possbile to call the mapping function with images of 3, 1, 1 bands but not with 3, 2, 1 bands. Single band images will be pumped up to
+  the maximum band count.
+}
+
+@defproc[
+ (image-map! [func procedure?] [img image?] ... )
+         image?]{
+  Same as image-map, but stores the result in the first given image by overwriting the original image contents.
+}
+
+@defproc[
+ (image-foldl [func procedure?] [seed any/c?] [img image?])
+         list?]{
+  Works like the foldl-function for lists, assuming that each image can be considered as a list of value lists. This function works band-wise
+  and applies the given function internally on each band of the image.
+}
+@defproc[
+ (image-foldr [func procedure?] [seed any/c?] [img image?])
+         list?]{
+  Works like the foldr-function for lists, assuming that each image can be considered as a list of value lists. This function works band-wise
+  and applies the given function internally on each band of the image.
+}
+@defproc[
+ (image-reduce [func procedure?] [img image?] [seed any/c?])
+         list?]{
+  Same as @code{(image-foldr func seed image)}. Still there for compatibilty issues.
+}
+
+Many algorithms work by means of an outer image traversal. To encapsulate this, the functional extension of vigracket has several supporting functions:
+
+@defproc[
+ (image-for-each-index [func procedure?] [img image?])
+         void]{
+  Calls a given procedure @code{func} with arguments x, y, band_id (e.g. @code{(lambda (x y band_id) (void))}) for every possible index (combination of x,y and band_id)
+ of the given image. If the result shall be visible, the function @code{func} must use side-effects, e.g. by means of @code{image-set!}.
+}
+
+@defproc[
+ (image-for-each-pixel [func procedure?] [img image?])
+         void]{
+  Calls a given procedure @code{func} with arguments x, y, pixel_value (e.g. @code{(lambda (x y value) (void))}) for every possible pixel (combination of x,y)
+ of the given image with the bands intensities listed. If the result shall be visible, the function @code{func} must use side-effects, e.g. by means of @code{image-set!}.
+}
+
+@defproc[
+ (image-while [pred procedure?] [img image?])
+         void]{
+  Calls a given procedure @code{pred} with arguments x, y, pixel_value (e.g. @code{(lambda (x y value) #t)}) for every possible pixel (combination of x,y)
+ of the given image with the bands intensities listed until the result of pred is false. If the result shall be persistent, the function @code{func} must use side-effects to store it.
 }
 
 @section{Matrices}
@@ -215,7 +421,7 @@ memory use is still within acceptable boundaries.
 @defproc[
  (copy-matrix [mat matrix?])
         matrix?]{
-  Returns a copy of the given matrix with freshly allocated foreing memory.
+  Returns a copy of the given matrix with freshly allocated foreign memory.
 }
 
 @defproc[
