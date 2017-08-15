@@ -38,9 +38,6 @@
                   (> (first version) 1))))
         #f))
   (define racket-bits (* 8 (ctype-sizeof _pointer)))
-  (define cmake-flags (if (= racket-bits 32)
-                          "-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_C_FLAGS=-m32"
-                          "-DCMAKE_BUILD_TYPE=Release"))
   (begin
     (if (or (equal? (system-type 'os) 'macosx)
             (equal? (system-type 'os) 'unix))
@@ -50,7 +47,7 @@
               (display "-------------- BUILDING VIGRA-C-WRAPPER FOR COMPUTER VISION AND IMAGE PROCESSING TASKS --------------")
               (newline)
               (current-directory vigra_c-path)
-              (if (system (string-append "mkdir build && cd build && cmake " cmake-flags " .. && make && cd .. && rm -rf ./build"))
+              (if (system* (format "build-~a.sh" racket-bits))
                   (begin
                     (copy-file (build-path (current-directory) "bin"  vigracket-dylib-file) vigracket-dylib-path #t)
                     #t)
