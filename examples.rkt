@@ -56,6 +56,8 @@
 (define  img3magnitude (image-map magnitude  (first img3) (second img3)))
 
 (define  img3ifft (fouriertransforminverse img3))
+(define  img3small_ifft (fouriertransforminverse (map (lambda (img) (subimage img 20 20 (- (image-width img) 20) (- (image-height img) 20)))
+                                                         img3)))
 
 (display "testing rotation and reflection functions on image")(newline)
 (define  img4 (reflectimage img 3))
@@ -253,6 +255,9 @@
 
 (saveimage (second img3ifft) (build-path save-path "images/rect-fft-ifft-real.png"))
 (saveimage (first  img3ifft) (build-path save-path "images/rect-fft-ifft-imag.png"))
+
+(saveimage (second img3small_ifft) (build-path save-path "images/rect-fft-small-ifft-real.png"))
+(saveimage (first  img3small_ifft) (build-path save-path "images/rect-fft-small-ifft-imag.png"))
 
 (saveimage img4    (build-path save-path "images/blox-reflected-both.png"))
 (saveimage img5    (build-path save-path "images/blox-rotated-15deg.png"))
