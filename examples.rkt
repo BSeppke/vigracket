@@ -185,7 +185,9 @@
 
 (show-image (separableconvolveimage img1 
                                     (list->matrix '((0.3333) (0.3333) (0.3333))) 
-                                    (list->matrix '((0.1 0.1 0.1 0.1 0.1 0.0 0.1 0.1 0.1 0.1 0.1))) )
+                                    (list->matrix '((0.1 0.1 0.1 0.1 0.1 0.0 0.1 0.1 0.1 0.1 0.1)))
+                                    2 ;;BORDER_MODE_REPEAT
+                                    )
             "Box mean separable convolution")
 
 ;Testing the vigra w.r.t. Schnoerr's coherence enhancing shock filter

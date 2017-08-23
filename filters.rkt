@@ -10,16 +10,17 @@
 
 (define vigra_convolveimage_c
   (get-ffi-obj 'vigra_convolveimage_c vigracket-dylib-path
-               (_fun (img_vector1 kernel_vector img_vector2 width height kernel_width kernel_height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 kernel_vector img_vector2 width height kernel_width kernel_height border_treatment) :: [img_vector1 : _cvector]
                      [kernel_vector : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
                      [kernel_width : _int]
                      [kernel_height : _int]
+                     [border_treatment : _int]
                      -> (res :  _int))))
 
-(define (convolveimage-band band kernel_matrix)
+(define (convolveimage-band band kernel_matrix [border_treatment 3])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix))
@@ -27,14 +28,16 @@
 	 (band2   (make-band width height))
          (foo     (vigra_convolveimage_c (band-data band) (matrix-data kernel_matrix)
                                          (band-data band2)
-                                         width height kernel_width kernel_height)))
+                                         width height kernel_width kernel_height
+                                         border_treatment)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.colvolveimage: Convolution with kernel failed!"))
-      ((2) (error "Error in vigracket.filters.colvolveimage: Kernel dimensions must be odd!")))))
+      ((2) (error "Error in vigracket.filters.colvolveimage: Kernel dimensions must be odd!"))
+      ((3) (error "Error in vigracket.filters.colvolveimage: Border treatment mode must be in [0, ..., 5]!")))))
 
-(define (convolveimage image kernel_matrix)
-  (map (lambda (band) (convolveimage-band band kernel_matrix)) image))
+(define (convolveimage image kernel_matrix [border_treatment 3])
+  (map (lambda (band) (convolveimage-band band kernel_matrix border_treatment)) image))
 
 
 ;###############################################################################
@@ -42,7 +45,7 @@
 
 (define vigra_separableconvolveimage_c
   (get-ffi-obj 'vigra_separableconvolveimage_c vigracket-dylib-path
-               (_fun (img_vector1 kernel_vector_h kernel_vector_v img_vector2 width height kernel_width kernel_height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 kernel_vector_h kernel_vector_v img_vector2 width height kernel_width kernel_height border_treatment) :: [img_vector1 : _cvector]
                      [kernel_vector_h : _cvector]
                      [kernel_vector_v : _cvector]
                      [img_vector2 : _cvector]
@@ -50,9 +53,10 @@
                      [height : _int]
                      [kernel_width : _int]
                      [kernel_height : _int]
+                     [border_treatment : _int]
                      -> (res :  _int))))
 
-(define (separableconvolveimage-band band kernel_matrix_h kernel_matrix_v)
+(define (separableconvolveimage-band band kernel_matrix_h kernel_matrix_v [border_treatment 3])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix_h))
@@ -60,14 +64,16 @@
 	 (band2   (make-band width height))
          (foo     (vigra_separableconvolveimage_c (band-data band) (matrix-data kernel_matrix_h) (matrix-data kernel_matrix_v)
                                                   (band-data band2) 
-                                                  width height kernel_width kernel_height)))
+                                                  width height kernel_width kernel_height
+                                                  border_treatment)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.separableconvolveimage Convolution with kernel failed!"))
-      ((2) (error "Error in vigracket.filters.separableconvolveimage Kernel dimensions must be odd!")))))
+      ((2) (error "Error in vigracket.filters.separableconvolveimage Kernel dimensions must be odd!"))
+      ((3) (error "Error in vigracket.filters.separableconvolveimage Border treatment mode must be in [0, ..., 5]!")))))
 	 
-(define (separableconvolveimage image kernel_matrix_h kernel_matrix_v)
-  (map (lambda (band) (separableconvolveimage-band band  kernel_matrix_h kernel_matrix_v)) image))
+(define (separableconvolveimage image kernel_matrix_h kernel_matrix_v  [border_treatment 3])
+  (map (lambda (band) (separableconvolveimage-band band  kernel_matrix_h kernel_matrix_v border_treatment)) image))
 
 
 ;###############################################################################

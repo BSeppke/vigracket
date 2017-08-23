@@ -27,19 +27,31 @@ derive informations from the image like partial derivatives etc.
 @defmodule[vigracket/filters]
 
 @defproc[
- (convolveimage [img image?] [kernel_matrix matrix?])
+ (convolveimage [img image?] [kernel_matrix matrix?] [border_treatment (in-list '(0 1 2 3 4 5))])
          image?]{
   Returns the result of the convolution of the image with the given kernel matrix. The kernel matrix should have
   an odd number of rows and columns. Note that this variant is slower than the separable variant for separable
-  filter kernels.
+  filter kernels. The meaning of the border treatment ids is as follows:
+  @tabular[#:sep @hspace[1]
+           #:style 'boxed
+           #:column-properties '(left center left)
+           #:row-properties '(bottom-border ())
+      (list (list @bold{ID}   @bold{VIGRA's mode} @bold{Description})
+            (list "0" "BORDER_TREATMENT_AVOID" "Do not operate on a pixel where the kernel doe not fit in the image}")
+            (list "1" "BORDER_TREATMENT_CLIP"  "Clip kernel at image border (this is only useful if the kernel is >= 0 everywhere)")
+            (list "2" "BORDER_TREATMENT_REPEAT""Repeat the nearest valid pixel")
+            (list "3" "BORDER_TREATMENT_REFLECT" "Reflect image at last row/column")
+            (list "4" "BORDER_TREATMENT_WRAP" "Wrap image around (periodic boundary conditions)")
+            (list "5" "BORDER_TREATMENT_ZEROPAD" "Assume that all outside points have value zero"))]
+  ]
 }
 
 @defproc[
- (separableconvolveimage [img image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?])
+ (separableconvolveimage [img image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?] [border_treatment (in-list '(0 1 2 3 4 5))])
          image?]{
   Returns the result of the convolution of the image with given kernel matrices for the horizontal and vertical convolution
   part. The @code{kernel_matrix_h} must have n (odd) rows and exactly one column, whereas the @code{kernel_matrix_v} must
-  have exaclty 1 row and n (odd) columns.
+  have exaclty 1 row and n (odd) columns. For the meaning of the border treatment ids, look above.
 }
 
 @defproc[
