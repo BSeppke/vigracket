@@ -141,7 +141,7 @@
 (show-image  (image->green img1) "Lennas green channel")
 (show-image  (image->blue img1) "Lennas blue channel")
 (show-image  img1 "Lenna in RGB")
-(show-image  (paddimage img1 10 20 30 40) "Padded Lenna in RGB")
+(show-image  (paddimage img1 10 20 30 40 '(255.0 0.0 0.0)) "Padded Lenna (red bg) in RGB")
 
 (display "testing band broadcasting")(newline)
 (define img_t (image-map *

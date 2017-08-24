@@ -319,7 +319,7 @@
 
 (define vigra_paddimage_c
   (get-ffi-obj 'vigra_paddimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height left upper right lower)
+               (_fun (img_vector1 img_vector2  width height left upper right lower value)
                      :: [img_vector1 : _cvector]
                         [img_vector2 : _cvector]
                         [width : _int]
@@ -328,22 +328,27 @@
                         [upper : _int]
                         [right : _int]
                         [lower : _int]
+                        [value : _float*]
                      -> [res :  _int])))
 
-(define (paddimage-band band left upper right lower)
+(define (paddimage-band band left upper right lower [value 0.0])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (padd_width (+ right width left))
          (padd_height (+ lower height upper))
          (band2  (make-band padd_width padd_height 0.0))
-         (foo    (vigra_paddimage_c (band-data band) (band-data band2) width height left upper right lower)))
+         (foo    (vigra_paddimage_c (band-data band) (band-data band2) width height left upper right lower value)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:paddimage: Padding image creation failed!!"))
       ((2) (error "Error in vigracket.imgproc:paddimage: Constraints not fullfilled: left & right >= 0, upper & lower >= 0")))))
 
-(define (paddimage image left upper right lower)
-  (map (lambda (band) (paddimage-band band left upper right lower)) image))
+(define (paddimage image left upper right lower [value '()])
+  (let* ((band_count (image-numbands image))
+         (fill_value (if (empty? value)
+                         (make-list band_count 0.0)
+                         value)))
+    (map (lambda (band band_value) (paddimage-band band left upper right lower band_value)) image fill_value)))
 
 (provide
            resizeimage-band

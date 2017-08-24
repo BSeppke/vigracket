@@ -241,9 +241,9 @@ This chapter contains different image transformation algorithms.
 }
 
 @defproc[
- (paddimage [img image?] [left number?] [upper number?] [right number?] [lower number?])
+ (paddimage [img image?] [left number?] [upper number?] [right number?] [lower number?] [value (list-of _float?) '()])
          image?]{
-  Padds an image and returns it by means of a new image.
+  Padds an image by the given color intensity list value and returns it by means of a new image. If no intensity list for value is given, the border will be filled with zeros/black.
 }
 
 @defproc[
