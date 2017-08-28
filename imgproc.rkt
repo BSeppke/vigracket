@@ -319,7 +319,7 @@
 
 (define vigra_paddimage_c
   (get-ffi-obj 'vigra_paddimage_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height left upper right lower value)
+               (_fun (img_vector1 img_vector2  width height left upper right lower)
                      :: [img_vector1 : _cvector]
                         [img_vector2 : _cvector]
                         [width : _int]
@@ -328,7 +328,6 @@
                         [upper : _int]
                         [right : _int]
                         [lower : _int]
-                        [value : _float*]
                      -> [res :  _int])))
 
 (define (paddimage-band band left upper right lower [value 0.0])
@@ -336,8 +335,8 @@
          (height (band-height band))
          (padd_width (+ right width left))
          (padd_height (+ lower height upper))
-         (band2  (make-band padd_width padd_height 0.0))
-         (foo    (vigra_paddimage_c (band-data band) (band-data band2) width height left upper right lower value)))
+         (band2  (make-band padd_width padd_height value))
+         (foo    (vigra_paddimage_c (band-data band) (band-data band2) width height left upper right lower)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:paddimage: Padding image creation failed!!"))
