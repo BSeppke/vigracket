@@ -29,14 +29,15 @@ import and export of the following image types, which are dermined by their file
 }
 
 Your self-compiled version of the vigraimpex library may als be capable of reading and
-witing hdf5 and OpenEXR datasets.
+witing OpenEXR datasets. HDF5 is currently not supported by vigracket.
 
 @centered{
  @bold{Please note that nearly all image formats (except TIFF) are NOT able to store
- floating point values. Instead, the image intensities are scaled from Min...Max to the fixed
- values 0...255 while exporting.
+ floating point values.
 
- If you need the actual values of the image, save them in the TIFF format!}}
+  Thus, if you need the actual floating point values of the image, save them in the TIFF format!
+
+  Refer to the documentation of the @code{exportImage} function below for more information.}}
 
 
 @defproc[
@@ -47,9 +48,16 @@ witing hdf5 and OpenEXR datasets.
 }
 
 @defproc[
- (save-image [img image?][filename string?])
+ (save-image [img image?][filename string?] [rescale_range boolean? #t])
          boolean?]{
-  Saves an image to the file system. Please not, that if you are not using the TIFF format, the values
- of the image's pixels may be rescaled. If the image already exists, it will be overwritten without warning.
+ Saves an image to the file system.
+
+ Please note, that if you are not using the TIFF format, the values
+ of the image's pixels will change. However, you can influece the change by means of the parameter @code{rescale_range}.
+ If set to true (default), the intensity values will be rescaled from Min...Max to 0..255. If set to false, the values will
+ be clipped at 0 and 255 respectively.
+
+ If the image already exists, it will be overwritten without warning.
+
  Returns #t on success.
 }

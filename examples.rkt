@@ -274,5 +274,8 @@
 (saveimage img13   (build-path save-path "images/blox-medianfilter-3x3.png"))
 (saveimage img14   (build-path save-path "images/blox-nonlineardiffusion-0.1-2.0.png"))
 
+(saveimage (first img1_st_ec)  (build-path save-path "images/lenna-st-cornerness-rescaled.png") #t) ; rescale from min...max to 0..255!
+(saveimage (first img1_st_ec)  (build-path save-path "images/lenna-st-cornerness-pure.png")     #f) ; clip to  to 0..255! If v>255 -> 255, if v<0 -> 0, else v.
+
 (saveimage shock_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
 (saveimage shock_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))
