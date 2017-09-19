@@ -513,7 +513,7 @@ To get these, vigracket offers basic access to some of the most important region
          image?]{
   Determines the features for an image and a label image. The y-coordinate of the resulting image determines the region id,
   for which the features shall be queried. The features are computed in a band-wise manner if the number of bands for image and labels
-  are equal. In this case, the resulting image is of size (17 x max_label x numBands) and has the following semantics:
+  are equal. In this case, the resulting image is of size (22 x max_label) for each band and has the following semantics:
  @tabular[#:sep @hspace[1]
           (list (list @bold{Index} @bold{Feature})
                 (list "0" 	"region_size")
@@ -527,24 +527,32 @@ To get these, vigracket offers basic access to some of the most important region
                 (list "11, 12" 	"major eigenvector: x and y-coord")
                 (list "13, 14" 	"minor eigenvector: x and y-coord")
                 (list "15"      "major eigenvalue")
-                (list "16"      "minor eigenvalue"))]
+                (list "16"      "minor eigenvalue")
+                (list "17, 18" 	"gray value weighted mean-x and y-coord")
+                (list "19"      "perimeter (region contour length)")
+                (list "20"      "skewness")
+                (list "21"      "kurtosis"))]
 
   If the image has three bands, and the labels have one band, RGB-features will be extracted instead. Here,
-  the resulting image is of size (25 x max_label x numBands) and has the following semantics:
+  the resulting image is of size (34 x max_label) and has the following semantics:
  @tabular[#:sep @hspace[1]
           (list (list @bold{Index} @bold{Feature})
                 (list "0" 	"region_size")
                 (list "1, 2" 	"upperleft-x and y-coord")
                 (list "3, 4" 	"lowerright-x and y-coord")
                 (list "5, 6" 	"mean-x and y-coord")
-                (list "7, 8, 9" 	"min red,green,blue value")
-                (list "10, 11, 12" 	"max red,green,blue value")
-                (list "13, 14, 15" 	"mean red,green,blue value")
+                (list "7, 8, 9" 	"min red, green, blue value")
+                (list "10, 11, 12" 	"max red, green, blue value")
+                (list "13, 14, 15" 	"mean red, green, blue value")
                 (list "16, 17, 18"	"std.dev. red,green,blue value")
                 (list "19, 20" 	"major eigenvector: x and y-coord")
                 (list "21, 22" 	"minor eigenvector: x and y-coord")
                 (list "23"      "major eigenvalue")
-                (list "24"      "minor eigenvalue"))]
+                (list "24"      "minor eigenvalue")
+                (list "25, 26" 	"luminance weighted mean-x and y-coord")
+                (list "27"      "perimeter (region contour length)")
+                (list "28, 29, 30"      "skewness for red, green, blue band")
+                (list "31, 32, 33"      "kurtosis for red, green, blue band"))]
 }
 
 For the visualization of a label image, a crack edge image may be appropriate. This image can e.g. be generated from a label image

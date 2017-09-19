@@ -229,7 +229,7 @@
 ;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
 (define (meanColorImage segmentation image)
   (let ((image_stats (extractfeatures image segmentation)))
-        (if (= (image-width image_stats) 25)
+        (if (= (image-width image_stats) 34)
             (let* ((region->meanColorBand (lambda (region_id col_id)
                                                       (image-ref image_stats col_id (inexact->exact (round region_id)) 0)))
                    (region->meanColorBand_r (curryr region->meanColorBand 13))
