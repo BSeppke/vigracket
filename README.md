@@ -67,7 +67,7 @@ You should be able to run the examples provided by the vigracket library by mean
 The documentation can be found inside the doc/manual folder for the complete-release package. You can also generate the docs from the scribble files using the script located in the docs folder. If the Racket-installation is in your ```PATH``` environment variable, you will be able to generate the docs by:
 
 ```bash
-cd docs 
+cd doc
 scribble --htmls manual.scrbl
 ```
 
