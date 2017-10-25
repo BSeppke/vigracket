@@ -247,6 +247,12 @@ This chapter contains different image transformation algorithms.
 }
 
 @defproc[
+ (clipimage [img image?] [low number? 0] [upp number? 255])
+         image?]{
+  Clips the image's pixel values for each band to be in the given range of low...upp. Values smaller than low will be set to low, values larger than upp will be set to upp.
+}
+
+@defproc[
  (localminima [img image?] [eight_connectivity boolean? #t])
          image?]{
   Finds the local minima of an image and returns another image, where only these are marked.

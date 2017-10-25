@@ -7,9 +7,6 @@
   (lambda args 
     (sqrt (apply + (map (lambda (x) (* x x)) args)))))
 
-(define (cut-8bit val)
-  (min (max val 0.0) 255.0))
-
 (define save-path (find-system-path 'temp-dir))
 (make-directory* (build-path save-path "images"))
 
@@ -61,7 +58,7 @@
 
 (display "testing rotation and reflection functions on image")(newline)
 (define  img4 (reflectimage img 3))
-(define  img5 (image-map cut-8bit (rotateimage img 15 3)))
+(define  img5 (clipimage (rotateimage img 15 3) 0 255))
 
 
 (display "testing affine transformation on image")(newline)
@@ -90,7 +87,7 @@
 
 (define tmat (matrix-mult t1mat (matrix-mult rotmat t2mat)))
 
-(define  img5aff (image-map cut-8bit (affinewarpimage img tmat 3)))
+(define  img5aff (clipimage (affinewarpimage img tmat 3) 0 255))
 
 (display "performing distance transform on canny edges of image")(newline)
  (define  img7 (distancetransform

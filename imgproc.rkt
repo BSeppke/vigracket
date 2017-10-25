@@ -349,6 +349,34 @@
                          value)))
     (map (lambda (band band_value) (paddimage-band band left upper right lower band_value)) image fill_value)))
 
+
+;###############################################################################
+;###################        Clipping Images to Min..Max     ####################
+
+(define vigra_clipimage_c
+  (get-ffi-obj 'vigra_clipimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 width height low upp)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                        [low : _float*]
+                        [upp : _float*]
+                     -> [res :  _int])))
+
+(define (clipimage-band band [low 0] [upp 255])
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+	 	 (band2 (make-band width height 0.0))
+         (foo   (vigra_clipimage_c (band-data band) (band-data band2) width height low upp)))
+    (if (= foo 0)
+      band2
+      (error "Error in vigracket.imgproc:clipimage: Clipping of image failed!!"))))
+
+
+(define (clipimage image [low 0] [upp 255])
+  (map (curryr clipimage-band low upp) image))
+
 (provide
            resizeimage-band
            resizeimage
@@ -373,4 +401,6 @@
            subimage-band
            subimage
            paddimage-band
-           paddimage)
+           paddimage
+           clipimage-band
+           clipimage)

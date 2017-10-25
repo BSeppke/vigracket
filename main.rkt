@@ -256,6 +256,8 @@
            subimage
            paddimage-band
            paddimage
+           clipimage-band
+           clipimage
            
            ;;vigracket.segmentation
            labelimage-band
