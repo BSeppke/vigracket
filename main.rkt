@@ -214,6 +214,8 @@
            nonlineardiffusion
            shockfilter-band
            shockfilter
+           nonlocalmeanfilter-band
+           nonlocalmeanfilter
 
            ;;vigracket.tensors
            structuretensor-band

@@ -261,25 +261,27 @@
 
 (define vigra_medianfilter_c
   (get-ffi-obj 'vigra_medianfilter_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2  width height window_width window_height) :: [img_vector1 : _cvector]
+               (_fun (img_vector1 img_vector2  width height window_width window_height border_treatment) :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
                      [window_width : _int]
                      [window_height : _int]
+                     [border_treatment : _int]
                      -> (res :  _int))))
 
-(define (medianfilter-band band window_width window_height)
+(define (medianfilter-band band window_width window_height [border_treatment 5])
   (let* ((width  (band-width  band))
 	 (height (band-height band))
 	 (band2   (make-band width height))
-	 (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height)))
+	 (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height border_treatment)))
     (case foo
       ((0) band2)
-      ((1) (error "Error in vigracket.filters.medianfilter: Median filtering failed!!")))))
+      ((1) (error "Error in vigracket.filters.medianfilter: Median filtering failed!!"))
+      ((2) (error "Error in vigracket.filters.medianfilter: Wrong border treatment. Must be in [0, 2, 3, 4, 5]!")))))
 
-(define (medianfilter image window_width window_height)
-  (map (lambda (band) (medianfilter-band band window_width window_height)) image))
+(define (medianfilter image window_width window_height [border_treatment 5])
+  (map (lambda (band) (medianfilter-band band window_width window_height border_treatment)) image))
 
 ;###############################################################################
 ;###################          Nonlinear Diffusion           ####################
@@ -334,6 +336,58 @@
 (define (shockfilter image sigma rho upwind_factor_h [iterations 1])
   (map (lambda (band) (shockfilter-band band sigma rho upwind_factor_h iterations)) image))
 
+;###############################################################################
+;###################         Non-local Mean Filter          ####################
+
+(define vigra_nonLocalMean_c
+  (get-ffi-obj 'vigra_nonLocalMean_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2  width height
+                      policy_type sigma mean varRatio epsilon
+                      sigmaSpatial searchRadius patchRadius sigmaMean
+                      stepSize iterations nThreads verbose)
+                  :: [img_vector1 : _cvector]
+                     [img_vector2 : _cvector]
+                     [width : _int]
+                     [height : _int]
+                     [policy_type : _int]
+                     [sigma : _float*]
+                     [mean : _float*]
+                     [varRatio : _float*]
+                     [epsilon : _float*]
+                     [sigmaSpatial : _float*]
+                     [searchRadius : _int]
+                     [patchRadius : _int]
+                     [sigmaMean : _float*]
+                     [stepSize : _int]
+                     [iterations : _int]
+                     [nThreads : _bool]
+                     -> (res :  _int))))
+
+(define (nonlocalmeanfilter-band band
+                                 [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
+                                 [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
+                                 [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
+  (let* ((width  (band-width  band))
+         (height (band-height band))
+         (band2  (make-band width height))
+         (foo   (vigra_nonLocalMean_c (band-data band) (band-data band2) width height
+                                      policy_type sigma mean varRatio epsilon
+                                      sigmaSpatial searchRadius patchRadius sigmaMean
+                                      stepSize iterations nThreads verbose)))
+    (case foo
+      ((0) band2)
+      ((1) (error "Error in vigracket.filters.nonlocalmeanfilter: Distance transformation failed!!"))
+      ((2) (error "Error in vigracket.filters.nonlocalmeanfilter: Policy type must be 0 or 1!")))))
+
+(define (nonlocalmeanfilter image
+                            [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
+                            [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
+                            [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
+  (map (lambda (band) (nonlocalmeanfilter-band band
+                                               policy_type sigma mean varRatio epsilon
+                                               sigmaSpatial searchRadius patchRadius sigmaMean
+                                               stepSize iterations nThreads verbose)) image))
+
 (provide   convolveimage-band
            convolveimage
            separableconvolveimage-band
@@ -357,4 +411,6 @@
            nonlineardiffusion-band
            nonlineardiffusion
            shockfilter-band
-           shockfilter)
+           shockfilter
+           nonlocalmeanfilter-band
+           nonlocalmeanfilter)

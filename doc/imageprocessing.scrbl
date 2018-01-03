@@ -27,11 +27,11 @@ derive informations from the image like partial derivatives etc.
 @defmodule[vigracket/filters]
 
 @defproc[
- (convolveimage [img image?] [kernel_matrix matrix?] [border_treatment (in-list '(0 1 2 3 4 5))])
+ (convolveimage [img image?] [kernel_matrix matrix?] [border_treatment (in-list '(0 1 2 3 4 5)) 3])
          image?]{
   Returns the result of the convolution of the image with the given kernel matrix. The kernel matrix should have
   an odd number of rows and columns. Note that this variant is slower than the separable variant for separable
-  filter kernels. The meaning of the border treatment ids is as follows:
+  filter kernels. The meaning of the border treatment ids is as follows (default is 3=Reflection):
   @tabular[#:sep @hspace[1]
            #:style 'boxed
            #:column-properties '(left center left)
@@ -47,7 +47,7 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (separableconvolveimage [img image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?] [border_treatment (in-list '(0 1 2 3 4 5))])
+ (separableconvolveimage [img image?] [kernel_matrix_h matrix?] [kernel_matrix_v matrix?] [border_treatment (in-list '(0 1 2 3 4 5)) 3])
          image?]{
   Returns the result of the convolution of the image with given kernel matrices for the horizontal and vertical convolution
   part. The @code{kernel_matrix_h} must have n (odd) rows and exactly one column, whereas the @code{kernel_matrix_v} must
@@ -102,9 +102,20 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (medianfilter [img image?] [window_width number?] [window_height number?])
+ (medianfilter [img image?] [window_width number?] [window_height number?] [border_treatment (in-list '(0 2 3 4 5)) 5])
          image?]{
   Performs a non-linear filtering by means of the median computation of the image using a window of given size.
+  The meaning of the border treatment ids is as follows (default is 5=Zero padding):
+  @tabular[#:sep @hspace[1]
+           #:style 'boxed
+           #:column-properties '(left center left)
+           #:row-properties '(bottom-border ())
+      (list (list @bold{ID}   @bold{VIGRA's mode} @bold{Description})
+            (list "0" "BORDER_TREATMENT_AVOID" "Do not operate on a pixel where the kernel doe not fit in the image}")
+            (list "2" "BORDER_TREATMENT_REPEAT""Repeat the nearest valid pixel")
+            (list "3" "BORDER_TREATMENT_REFLECT" "Reflect image at last row/column")
+            (list "4" "BORDER_TREATMENT_WRAP" "Wrap image around (periodic boundary conditions)")
+            (list "5" "BORDER_TREATMENT_ZEROPAD" "Assume that all outside points have value zero"))]
 }
 
 @defproc[
@@ -116,8 +127,24 @@ derive informations from the image like partial derivatives etc.
 @defproc[
  (shockfilter [img image?] [sigma number?] [rho number?] [upwind_factor_h number?] [iterations number? 1])
          image?]{
-  Performs a non-linear filtering of the image using a Ceherence Enhancing Shock Filtering at scale of @code{sigam}.
+  Performs a non-linear filtering of the image using a Ceherence Enhancing Shock Filtering at scale of @code{sigma}.
   For more information on this filter, read the original work at @url{http://www.mia.uni-saarland.de/Publications/weickert-dagm03.pdf}.
+}
+
+@defproc[
+ (nonlocalmeanfilter [img image?]
+                     [policy_type  (in-list '(0 1)) 1] [sigma number? 50.0] [mean number? 5.0] [varRatio number? 0.5] [epsilon number? 0.00001]
+                     [sigmaSpatial number? 2.0] [searchRadius number? 5] [patchRadius number? 2] [sigmaMean number? 10.0]
+                     [stepSize number? 2] [iterations number? 10] [nThreads number? 8] [verbose boolean? #t])
+         image?]{
+  Performs a non-local mean filtering of the image using a the method of P. Coupe, P. Yger, S. Prima, P. Hellier, C. Kervrann, C. Barillot:
+  "An Optimized Blockwise Non Local Means Denoising Filter for 3D Magnetic Resonance Images". In: IEEE Transactions on Medical Imaging,
+  27(4):425-441, April 2008. The default parameters are set accordingly to the vigranumpy example. Please note that the values of: sigma,
+  and mean have different meanings under the selected policy types.
+
+  For a ratio policy (policy_type = 0), they refer to the sigma and mean ratio, while for the norm policy (policy_type = 1), the refer
+  to the sigma and mean norm. Good values for the norm policy are the default ones, for the ratio policy, you may want to try out the
+  following parameters: sigma=10.0, mean=0.95.
 }
 
 

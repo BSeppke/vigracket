@@ -192,6 +192,10 @@
 (define shock_img5 (shockfilter shock_img1 2.0 6.0 0.3 4))
 (show-image shock_img5  "Shock-filtered image (after 5 iterations)")
 
+;Testing the vigra w.r.t. non-local mean filter
+(define nlm_img1 (nonlocalmeanfilter img1))
+(show-image nlm_img1  "Non-local mean filtered image (with default args)")
+
 
 #|
 ;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
@@ -276,3 +280,5 @@
 
 (saveimage shock_img1  (build-path save-path "images/lenna-shock-s2-r6-t03-i1.png"))
 (saveimage shock_img5  (build-path save-path "images/lenna-shock-s2-r6-t03-i5.png"))
+
+(saveimage nlm_img1  (build-path save-path "images/lenna-nlm.png"))
