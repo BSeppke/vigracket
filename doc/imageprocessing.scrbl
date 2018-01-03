@@ -132,10 +132,10 @@ derive informations from the image like partial derivatives etc.
 }
 
 @defproc[
- (nonlocalmeanfilter [img image?]
-                     [policy_type  (in-list '(0 1)) 1] [sigma number? 50.0] [mean number? 5.0] [varRatio number? 0.5] [epsilon number? 0.00001]
-                     [sigmaSpatial number? 2.0] [searchRadius number? 5] [patchRadius number? 2] [sigmaMean number? 10.0]
-                     [stepSize number? 2] [iterations number? 10] [nThreads number? 8] [verbose boolean? #t])
+ (nonlocalmean [img image?]
+               [policy_type  (in-list '(0 1)) 1] [sigma number? 50.0] [mean number? 5.0] [varRatio number? 0.5] [epsilon number? 0.00001]
+               [sigmaSpatial number? 2.0] [searchRadius number? 5] [patchRadius number? 2] [sigmaMean number? 10.0]
+               [stepSize number? 2] [iterations number? 10] [nThreads number? 8] [verbose boolean? #t])
          image?]{
   Performs a non-local mean filtering of the image using a the method of P. Coupe, P. Yger, S. Prima, P. Hellier, C. Kervrann, C. Barillot:
   "An Optimized Blockwise Non Local Means Denoising Filter for 3D Magnetic Resonance Images". In: IEEE Transactions on Medical Imaging,

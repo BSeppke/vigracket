@@ -22,10 +22,10 @@
 
 (define (convolveimage-band band kernel_matrix [border_treatment 3])
   (let* ((width  (band-width  band))
-	 (height (band-height band))
+         (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix))
-	 (kernel_height (matrix-rows  kernel_matrix))
-	 (band2   (make-band width height))
+         (kernel_height (matrix-rows  kernel_matrix))
+         (band2   (make-band width height))
          (foo     (vigra_convolveimage_c (band-data band) (matrix-data kernel_matrix)
                                          (band-data band2)
                                          width height kernel_width kernel_height
@@ -58,10 +58,10 @@
 
 (define (separableconvolveimage-band band kernel_matrix_h kernel_matrix_v [border_treatment 3])
   (let* ((width  (band-width  band))
-	 (height (band-height band))
+         (height (band-height band))
          (kernel_width  (matrix-cols  kernel_matrix_h))
-	 (kernel_height (matrix-rows  kernel_matrix_v))
-	 (band2   (make-band width height))
+         (kernel_height (matrix-rows  kernel_matrix_v))
+         (band2   (make-band width height))
          (foo     (vigra_separableconvolveimage_c (band-data band) (matrix-data kernel_matrix_h) (matrix-data kernel_matrix_v)
                                                   (band-data band2) 
                                                   width height kernel_width kernel_height
@@ -90,9 +90,9 @@
 
 (define (gsmooth-band band sigma)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_gaussiansmoothing_c (band-data band) (band-data band2) width height sigma)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_gaussiansmoothing_c (band-data band) (band-data band2) width height sigma)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.gsmooth: Gaussian smoothing failed!")))))
@@ -116,10 +116,10 @@
 
 (define (gaussiangradient-band band sigma)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (band3   (make-band width height))
-	 (foo   (vigra_gaussiangradient_c (band-data band) (band-data band2) (band-data band3) width height sigma)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (band3   (make-band width height))
+         (foo   (vigra_gaussiangradient_c (band-data band) (band-data band2) (band-data band3) width height sigma)))
     (case foo
       ((0) (list band2 band3))
       ((1) (error "Error in vigracket.filters.gaussiangradient: Gaussian gradient calculation (nX, nY) failed!")))))
@@ -141,9 +141,9 @@
 
 (define (ggradient-band band sigma)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_gaussiangradientmagnitude_c (band-data band) (band-data band2) width height sigma)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_gaussiangradientmagnitude_c (band-data band) (band-data band2) width height sigma)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.ggradient: Gaussian gradient magnitude failed!")))))
@@ -166,9 +166,9 @@
 
 (define (laplacianofgaussian-band band scale)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_laplacianofgaussian_c (band-data band) (band-data band2) width height scale)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_laplacianofgaussian_c (band-data band) (band-data band2) width height scale)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.laplacianofgaussian: Laplacian of Gaussian failed!")))))
@@ -193,11 +193,11 @@
 
 (define (hessianmatrixofgaussian-band band scale)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band_xx   (make-band width height))
-	 (band_xy   (make-band width height))
-	 (band_yy   (make-band width height))
-	 (foo   (vigra_hessianmatrixofgaussian_c (band-data band) (band-data band_xx) (band-data band_xy) (band-data band_yy) width height scale)))
+         (height (band-height band))
+         (band_xx   (make-band width height))
+         (band_xy   (make-band width height))
+         (band_yy   (make-band width height))
+         (foo   (vigra_hessianmatrixofgaussian_c (band-data band) (band-data band_xx) (band-data band_xy) (band-data band_yy) width height scale)))
     (case foo
       ((0) (list band_xx band_xy band_yy))
       ((1) (error "Error in vigracket.filters.hessianmatrixofgaussian: Calculation of Hessian Matrix (of gaussian 2. deriv.) failed!")))))
@@ -220,9 +220,9 @@
 
 (define (gsharpening-band band sharpening_factor scale)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_gaussiansharpening_c (band-data band) (band-data band2) width height  sharpening_factor scale)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_gaussiansharpening_c (band-data band) (band-data band2) width height  sharpening_factor scale)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.gsharpening: Gaussian sharpening failed!")))))
@@ -245,9 +245,9 @@
 
 (define (sharpening-band band sharpening_factor)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_simplesharpening_c (band-data band) (band-data band2) width height sharpening_factor)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_simplesharpening_c (band-data band) (band-data band2) width height sharpening_factor)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.sharpening: Simple sharpening failed!")))))
@@ -272,9 +272,9 @@
 
 (define (medianfilter-band band window_width window_height [border_treatment 5])
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height border_treatment)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_medianfilter_c (band-data band) (band-data band2) width height window_width window_height border_treatment)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.medianfilter: Median filtering failed!!"))
@@ -298,9 +298,9 @@
 
 (define (nonlineardiffusion-band band edge_threshold scale)
   (let* ((width  (band-width  band))
-	 (height (band-height band))
-	 (band2   (make-band width height))
-	 (foo   (vigra_nonlineardiffusion_c (band-data band) (band-data band2) width height edge_threshold scale)))
+         (height (band-height band))
+         (band2   (make-band width height))
+         (foo   (vigra_nonlineardiffusion_c (band-data band) (band-data band2) width height edge_threshold scale)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.filters.nonlineardiffusion: Non linear Diffusion failed!!")))))
@@ -339,13 +339,13 @@
 ;###############################################################################
 ;###################         Non-local Mean Filter          ####################
 
-(define vigra_nonLocalMean_c
-  (get-ffi-obj 'vigra_nonLocalMean_c vigracket-dylib-path
+(define vigra_nonlocalmean_c
+  (get-ffi-obj 'vigra_nonlocalmean_c vigracket-dylib-path
                (_fun (img_vector1 img_vector2  width height
-                      policy_type sigma mean varRatio epsilon
-                      sigmaSpatial searchRadius patchRadius sigmaMean
-                      stepSize iterations nThreads verbose)
-                  :: [img_vector1 : _cvector]
+                                  policy_type sigma mean varRatio epsilon
+                                  sigmaSpatial searchRadius patchRadius sigmaMean
+                                  stepSize iterations nThreads verbose)
+                     :: [img_vector1 : _cvector]
                      [img_vector2 : _cvector]
                      [width : _int]
                      [height : _int]
@@ -363,30 +363,30 @@
                      [nThreads : _bool]
                      -> (res :  _int))))
 
-(define (nonlocalmeanfilter-band band
-                                 [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
-                                 [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
-                                 [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
+(define (nonlocalmean-band band
+                           [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
+                           [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
+                           [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (band2  (make-band width height))
-         (foo   (vigra_nonLocalMean_c (band-data band) (band-data band2) width height
+         (foo   (vigra_nonlocalmean_c (band-data band) (band-data band2) width height
                                       policy_type sigma mean varRatio epsilon
                                       sigmaSpatial searchRadius patchRadius sigmaMean
                                       stepSize iterations nThreads verbose)))
     (case foo
       ((0) band2)
-      ((1) (error "Error in vigracket.filters.nonlocalmeanfilter: Distance transformation failed!!"))
-      ((2) (error "Error in vigracket.filters.nonlocalmeanfilter: Policy type must be 0 or 1!")))))
+      ((1) (error "Error in vigracket.filters.nonlocalmean: Distance transformation failed!!"))
+      ((2) (error "Error in vigracket.filters.nonlocalmean: Policy type must be 0 or 1!")))))
 
-(define (nonlocalmeanfilter image
-                            [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
-                            [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
-                            [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
-  (map (lambda (band) (nonlocalmeanfilter-band band
-                                               policy_type sigma mean varRatio epsilon
-                                               sigmaSpatial searchRadius patchRadius sigmaMean
-                                               stepSize iterations nThreads verbose)) image))
+(define (nonlocalmean image
+                      [policy_type 1] [sigma 50.0] [mean 5.0] [varRatio 0.5] [epsilon 0.00001]
+                      [sigmaSpatial 2.0] [searchRadius 5] [patchRadius 2] [sigmaMean 10.0]
+                      [stepSize 2] [iterations 10] [nThreads 8] [verbose #t])
+  (map (lambda (band) (nonlocalmean-band band
+                                         policy_type sigma mean varRatio epsilon
+                                         sigmaSpatial searchRadius patchRadius sigmaMean
+                                         stepSize iterations nThreads verbose)) image))
 
 (provide   convolveimage-band
            convolveimage
@@ -412,5 +412,5 @@
            nonlineardiffusion
            shockfilter-band
            shockfilter
-           nonlocalmeanfilter-band
-           nonlocalmeanfilter)
+           nonlocalmean-band
+           nonlocalmean)

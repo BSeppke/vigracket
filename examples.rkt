@@ -193,7 +193,7 @@
 (show-image shock_img5  "Shock-filtered image (after 5 iterations)")
 
 ;Testing the vigra w.r.t. non-local mean filter
-(define nlm_img1 (nonlocalmeanfilter img1))
+(define nlm_img1 (nonlocalmean img1))
 (show-image nlm_img1  "Non-local mean filtered image (with default args)")
 
 
