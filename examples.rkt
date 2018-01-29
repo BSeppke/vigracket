@@ -1,11 +1,13 @@
 #lang racket
 
+(require racket/flonum)
+
 ;Always the first step: load the VigRACKET lib
 (require vigracket)
 
 (define magnitude 
   (lambda args 
-    (sqrt (apply + (map (lambda (x) (* x x)) args)))))
+    (sqrt (apply fl+ (map (lambda (x) (fl* x x)) args)))))
 
 (define save-path (find-system-path 'temp-dir))
 (make-directory* (build-path save-path "images"))
@@ -143,7 +145,7 @@
 (display "testing band broadcasting")(newline)
 (define img_t (image-map *
                          img1 
-			(image-map (lambda (x) (if (< 100 x) 1.0 0.0))
+			(image-map (lambda (x) (if (fl< 100.0 x) 1.0 0.0))
                                    (image->green img1))))
 
 ; Tensor tests
