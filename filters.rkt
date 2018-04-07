@@ -360,7 +360,8 @@
                      [sigmaMean : _float*]
                      [stepSize : _int]
                      [iterations : _int]
-                     [nThreads : _bool]
+                     [nThreads : _int]
+                     [verbose : _bool]
                      -> (res :  _int))))
 
 (define (nonlocalmean-band band
