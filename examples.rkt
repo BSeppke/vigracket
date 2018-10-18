@@ -198,37 +198,6 @@
 (define nlm_img1 (nonlocalmean img1))
 (show-image nlm_img1  "Non-local mean filtered image (with default args)")
 
-
-#|
-;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
-(define (meanColorImage segmentation image)
-  (let* ((region_count (inexact->exact	(+ (car (image-reduce max segmentation 0))  1)))
-         (region_sizes  (make-vector region_count))
-         (region_colors (make-vector region_count (make-list (image-numbands image) 0.0)))
-         (new_image (copy-image image))
-         (foo (image-for-each-pixel 
-               (lambda (x y p)
-                 (let ((region_id    (inexact->exact (image-ref segmentation x y 0))))         
-                   (begin
-                     (vector-set! region_sizes region_id  (+ (vector-ref region_sizes region_id) 1))
-                     (vector-set! region_colors region_id  (map + p (vector-ref region_colors region_id))))))
-               image))
-         (normalized_colors (vector-map (lambda (color_list size)
-                                               (map (lambda (color) (exact->inexact (/ color (max 1 size))))
-                                                    color_list))
-                                 region_colors
-                                 region_sizes)))
-         (image-for-each-pixel 
-               (lambda (x y p)
-                 (let ((region_id (inexact->exact (image-ref segmentation x y 0))))
-                   (image-set! new_image x y (vector-ref normalized_colors region_id))))
-                 new_image)))
-
-(show-image (regionimagetocrackedgeimage (meanColorImage (watersheds-rg (ggradient (image->green img1) 2.0)) img1) 0.0) "img1 - watershed regions")
-(show-image (regionimagetocrackedgeimage (meanColorImage (slic img1) img1) 0.0) "img1 - slic regions")
-(show-image (regionimagetocrackedgeimage (meanColorImage (slic img) img) 0.0) "img - slic regions")
-|#
-
 ;Testing the vigra w.r.t. watershed segmentation and the mean image of a given image
 (define (meanColorImage segmentation image)
   (let ((image_stats (extractfeatures image segmentation)))
