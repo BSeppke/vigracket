@@ -27,8 +27,8 @@
 (define neg_matches (localminima fncc_res))
 
 
-(display "test gaussian smoothing")(newline)
-(time (gsmooth img 0.3))
+(display "test gaussian smoothing using vigracket: ")
+(time (void (gsmooth img 0.3)))
 
 (display "test DoG approx. as LoG (127 == zero)")(newline)
 (show-image (image-map (lambda (x) (+ 127 x)) (image-map -  (gsmooth img 2) (gsmooth img 1))))
@@ -52,6 +52,14 @@
 (display "performing fft on image")(newline)
 (define  img_rect (loadimage (build-path vigracket-path "images/rect.png")))
 (define  img3 (fouriertransform (image->alpha img_rect)))
+
+;;Speed comparison: Racket vs C++
+(display "Computing fft magnitude using Racket's functions: ")
+(time (void (image-map magnitude  (first img3) (second img3))))
+
+(display "Computing fft magnitude using vigracket's functions: ")
+(time (void (image^ (image+ (image* (first img3) (first img3)) (image* (second img3) (second img3))) '(0.5))))
+
 (define  img3magnitude (image-map magnitude  (first img3) (second img3)))
 
 (define  img3ifft (fouriertransforminverse img3))
