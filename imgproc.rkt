@@ -235,19 +235,24 @@
 
 (define vigra_localmaxima_c
   (get-ffi-obj 'vigra_localmaxima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height eight_connectivity)
+               (_fun (img_vector1 img_vector2 width height eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon)
                      :: [img_vector1 : _cvector]
                         [img_vector2 : _cvector]
                         [width : _int]
                         [height : _int]
                         [eight_connectivity : _bool]
+                        [marker : _float*]
+                        [threshold : _float*]
+                        [allow_at_border : _bool]
+                        [allow_plateaus : _bool]
+                        [plateau_epsilon : _float]
                      -> [res :  _int])))
 
-(define (localmaxima-band band [eight_connectivity #t])
+(define (localmaxima-band band [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (band2  (make-band width height 0.0))
-         (foo   (vigra_localmaxima_c (band-data band) (band-data band2) width height eight_connectivity)))
+         (foo   (vigra_localmaxima_c (band-data band) (band-data band2) width height eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:localmaxima: Finding local maxima of image failed!!")))))
@@ -261,19 +266,24 @@
 
 (define vigra_localminima_c
   (get-ffi-obj 'vigra_localminima_c vigracket-dylib-path
-               (_fun (img_vector1 img_vector2 width height eight_connectivity)
+               (_fun (img_vector1 img_vector2 width height eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon)
                      :: [img_vector1 : _cvector]
                         [img_vector2 : _cvector]
                         [width : _int]
                         [height : _int]
                         [eight_connectivity : _bool]
+                        [marker : _float*]
+                        [threshold : _float*]
+                        [allow_at_border : _bool]
+                        [allow_plateaus : _bool]
+                        [plateau_epsilon : _float]
                      -> [res :  _int])))
 
-(define (localminima-band band [eight_connectivity #t])
+(define (localminima-band band [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
   (let* ((width  (band-width  band))
          (height (band-height band))
 	 	 (band2 (make-band width height 0.0))
-         (foo   (vigra_localminima_c (band-data band) (band-data band2) width height eight_connectivity)))
+         (foo   (vigra_localminima_c (band-data band) (band-data band2) width height eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon)))
     (case foo
       ((0) band2)
       ((1) (error "Error in vigracket.imgproc:localminima: Finding local minima of image failed!!")))))
@@ -377,6 +387,201 @@
 (define (clipimage image [low 0] [upp 255])
   (map (curryr clipimage-band low upp) image))
 
+;###############################################################################
+;###################           Image addition               ####################
+
+(define vigra_imageplusimage_c
+  (get-ffi-obj 'vigra_imageplusimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define vigra_imageplusvalue_c
+  (get-ffi-obj 'vigra_imageplusvalue_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 value width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [value : _float*]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (image+-band band1 band2_or_value)
+  (let* ((width  (band-width  band1))
+         (height (band-height band1))
+	 (band3 (make-band width height 0.0))
+         (foo    (if (number? band2_or_value)
+                     (vigra_imageplusvalue_c (band-data band1) (band-data band3) band2_or_value width height)
+                     (vigra_imageplusimage_c (band-data band1) (band-data band2_or_value) (band-data band3) width height))))
+    (case foo
+      ((0) band3)
+      ((1) (error "Error in vigracket.imgproc.image+: Addition of images failed!!")))))
+
+(define (image+ image1 image2)
+  (map image+-band image1 image2))
+
+
+;###############################################################################
+;###################           Image subtraction            ####################
+
+(define vigra_imageminusimage_c
+  (get-ffi-obj 'vigra_imageminusimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define vigra_imageminusvalue_c
+  (get-ffi-obj 'vigra_imageminusvalue_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 value width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [value : _float*]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (image--band band1 band2_or_value)
+  (let* ((width  (band-width  band1))
+         (height (band-height band1))
+	 (band3 (make-band width height 0.0))
+         (foo    (if (number? band2_or_value)
+                     (vigra_imageminusvalue_c (band-data band1) (band-data band3) band2_or_value width height)
+                     (vigra_imageminusimage_c (band-data band1) (band-data band2_or_value) (band-data band3) width height))))
+    (case foo
+      ((0) band3)
+      ((1) (error "Error in vigracket.imgproc.image-: Subtraction of images failed!!")))))
+
+(define (image- image1 image2)
+  (map image--band image1 image2))
+
+
+
+;###############################################################################
+;###################           Image multiplication         ####################
+
+(define vigra_imagemultimage_c
+  (get-ffi-obj 'vigra_imagemultimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define vigra_imagemultvalue_c
+  (get-ffi-obj 'vigra_imagemultvalue_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 value width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [value : _float*]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (image*-band band1 band2_or_value)
+  (let* ((width  (band-width  band1))
+         (height (band-height band1))
+	 (band3 (make-band width height 0.0))
+         (foo    (if (number? band2_or_value)
+                     (vigra_imagemultvalue_c (band-data band1) (band-data band3) band2_or_value width height)
+                     (vigra_imagemultimage_c (band-data band1) (band-data band2_or_value) (band-data band3) width height))))
+    (case foo
+      ((0) band3)
+      ((1) (error "Error in vigracket.imgproc.image*: Multiplication of images failed!!")))))
+
+(define (image* image1 image2)
+  (map image*-band image1 image2))
+
+
+
+
+;###############################################################################
+;###################              Image dividing            ####################
+
+(define vigra_imagedivideimage_c
+  (get-ffi-obj 'vigra_imagedivideimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define vigra_imagedividevalue_c
+  (get-ffi-obj 'vigra_imagedividevalue_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 value width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [value : _float*]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (image/-band band1 band2_or_value)
+  (let* ((width  (band-width  band1))
+         (height (band-height band1))
+	 (band3 (make-band width height 0.0))
+         (foo    (if (number? band2_or_value)
+                     (vigra_imagedividevalue_c (band-data band1) (band-data band3) band2_or_value width height)
+                     (vigra_imagedivideimage_c (band-data band1) (band-data band2_or_value) (band-data band3) width height))))
+    (case foo
+      ((0) band3)
+      ((1) (error "Error in vigracket.imgproc.image/: Dividing of images failed!!")))))
+
+(define (image/ image1 image2)
+  (map image/-band image1 image2))
+
+
+
+;###############################################################################
+;###################          Image raised to power         ####################
+
+(define vigra_imagepowimage_c
+  (get-ffi-obj 'vigra_imagepowimage_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 img_vector3 width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [img_vector3 : _cvector]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define vigra_imagepowvalue_c
+  (get-ffi-obj 'vigra_imagepowvalue_c vigracket-dylib-path
+               (_fun (img_vector1 img_vector2 value width height)
+                     :: [img_vector1 : _cvector]
+                        [img_vector2 : _cvector]
+                        [value : _float*]
+                        [width : _int]
+                        [height : _int]
+                     -> [res :  _int])))
+
+(define (image^-band band1 band2_or_value)
+  (let* ((width  (band-width  band1))
+         (height (band-height band1))
+	 (band3 (make-band width height 0.0))
+         (foo    (if (number? band2_or_value)
+                     (vigra_imagepowvalue_c (band-data band1) (band-data band3) band2_or_value width height)
+                     (vigra_imagepowimage_c (band-data band1) (band-data band2_or_value) (band-data band3) width height))))
+    (case foo
+      ((0) band3)
+      ((1) (error "Error in vigracket.imgproc.image^: Dividing of images failed!!")))))
+
+(define (image^ image1 image2)
+  (map image^-band image1 image2))
+
+
+
 (provide
            resizeimage-band
            resizeimage
@@ -403,4 +608,14 @@
            paddimage-band
            paddimage
            clipimage-band
-           clipimage)
+           clipimage
+           image+-band
+           image+
+           image--band
+           image-
+           image*-band
+           image*
+           image/-band
+           image/
+           image^-band
+           image^)

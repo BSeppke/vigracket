@@ -260,6 +260,16 @@
            paddimage
            clipimage-band
            clipimage
+           image+-band
+           image+
+           image--band
+           image-
+           image*-band
+           image*
+           image/-band
+           image/
+           image^-band
+           image^
            
            ;;vigracket.segmentation
            labelimage-band
