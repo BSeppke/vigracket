@@ -248,7 +248,7 @@
                         [plateau_epsilon : _float]
                      -> [res :  _int])))
 
-(define (localmaxima-band band [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+(define (localmaxima-band band [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 0.001])
   (let* ((width  (band-width  band))
          (height (band-height band))
          (band2  (make-band width height 0.0))
@@ -258,7 +258,7 @@
       ((1) (error "Error in vigracket.imgproc:localmaxima: Finding local maxima of image failed!!")))))
 
 
-(define (localmaxima image [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+(define (localmaxima image [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 0.001])
   (map (curryr localmaxima-band eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon) image))
 
 ;###############################################################################
@@ -279,7 +279,7 @@
                         [plateau_epsilon : _float]
                      -> [res :  _int])))
 
-(define (localminima-band band [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+(define (localminima-band band [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 0.001])
   (let* ((width  (band-width  band))
          (height (band-height band))
 	 	 (band2 (make-band width height 0.0))
@@ -289,7 +289,7 @@
       ((1) (error "Error in vigracket.imgproc:localminima: Finding local minima of image failed!!")))))
 
 
-(define (localminima image [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+(define (localminima image [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 0.0001])
   (map (curryr localminima-band eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon) image))
 
 ;###############################################################################
