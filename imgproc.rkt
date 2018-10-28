@@ -258,8 +258,8 @@
       ((1) (error "Error in vigracket.imgproc:localmaxima: Finding local maxima of image failed!!")))))
 
 
-(define (localmaxima image [eight_connectivity #t])
-  (map (curryr localmaxima-band eight_connectivity) image))
+(define (localmaxima image [eight_connectivity #t] [marker 1.0] [threshold 0.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+  (map (curryr localmaxima-band eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon) image))
 
 ;###############################################################################
 ;###################           Local Minima Extraction      ####################
@@ -289,8 +289,8 @@
       ((1) (error "Error in vigracket.imgproc:localminima: Finding local minima of image failed!!")))))
 
 
-(define (localminima image [eight_connectivity #t])
-  (map (curryr localminima-band eight_connectivity) image))
+(define (localminima image [eight_connectivity #t] [marker 1.0] [threshold 255.0] [allow_at_border #f] [allow_plateaus #f] [plateau_epsilon 1.0])
+  (map (curryr localminima-band eight_connectivity marker threshold allow_at_border allow_plateaus plateau_epsilon) image))
 
 ;###############################################################################
 ;###################            Sub image                   ####################
