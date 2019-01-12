@@ -1,6 +1,7 @@
 #lang racket
 
 (require vigracket/config)
+(require vigracket/carray)
 (require vigracket/helpers)
 (require scheme/foreign)
 (unsafe!)
@@ -176,10 +177,104 @@
 (define image-save saveimage)
 (define save-image saveimage)
 
-(provide 
+
+
+
+
+
+
+
+(define vigra_has_hdf5_c
+    (get-ffi-obj 'vigra_has_hdf5_c vigracket-dylib-path
+                (_fun -> [hasHdf5Support : _int])))
+
+(define vigra_hdf5_numdimensions_c
+    (get-ffi-obj 'vigra_hdf5_numdimensions_c vigracket-dylib-path
+                (_fun    [filename : _string]
+                         [pathInFile : _string]
+                      -> [numDimensions : _int])))
+
+(define vigra_hdf5_shape_c
+    (get-ffi-obj 'vigra_hdf5_shape_c vigracket-dylib-path
+                (_fun    [filename : _string]
+                         [pathInFile : _string]
+                         [shape_arr : _cvector]
+                         [numDimensions : _int]
+                      -> [error : _int])))
+
+(define vigra_hdf5_importarray_c
+    (get-ffi-obj 'vigra_hdf5_importarray_c vigracket-dylib-path
+                (_fun    [filename : _string]
+                         [pathInFile : _string]
+                         [flat_arr : _cvector]
+                         [shape_arr : _cvector]
+                         [numDimensions : _int]
+                      -> [error : _int])))
+
+(define vigra_hdf5_exportarray_c
+    (get-ffi-obj 'vigra_hdf5_exportarray_c vigracket-dylib-path
+                (_fun    [flat_arr : _cvector]
+                         [shape_arr : _cvector]
+                         [numDimensions : _int]
+                         [filename : _string]
+                         [pathInFile : _string]
+                      -> [error : _int])))
+
+
+
+
+(define (hdf5shape filename pathInFile)
+  (if (= (vigra_has_hdf5_c) 0)
+      (error "HDF5 is not included in your installation of vigra_c")
+      (let [(numDimensions (vigra_hdf5_numdimensions_c filename pathInFile))]
+        (if (> numDimensions 0)
+            (let* [(shape_arr (make-cvector _int numDimensions))
+                   (result    (vigra_hdf5_shape_c filename pathInFile shape_arr numDimensions))]
+              (if (= result 0)
+                  shape_arr
+                  (error "Reading of shape for HDF5 file failed.")))
+            (error "Reading of number of dimensions for HDF5 file failed.")))))
+              
+
+(define (loadarray filename pathInFile)
+  (let* [(shape_arr (hdf5shape filename pathInFile))
+         (shape_list (map inexact->exact (cvector->list shape_arr)))
+         (totalLen  (apply * shape_list))
+         (numDimensions  (length shape_list))
+         (hdf5_arr  (make-carray _float shape_list))
+         (result    (vigra_hdf5_importarray_c  filename pathInFile (carray-data hdf5_arr) shape_arr numDimensions))]
+    (if (= result 0)
+        hdf5_arr
+        (error "Loading of hdf5 array failed."))))        
+
+(define array-load loadarray)
+(define load-array loadarray)
+
+(define (savearray arr filename pathInFile)
+  (let* [(shape_list (carray-dimensions arr))
+         (shape_arr (list->cvector shape_list _int))
+         (numDimensions  (length shape_list))
+         (result    (vigra_hdf5_exportarray_c (carray-data arr) shape_arr numDimensions filename pathInFile))]
+    (if (= result 0)
+        #t
+        (error "Saving of hdf5 array failed."))))
+
+(define array-save savearray)
+(define save-array savearray)
+
+(provide
            loadimage
            load-image
            image-load
+           
            saveimage
            save-image
-           image-save)
+           image-save
+           
+           loadarray
+           load-array
+           array-load
+           
+           savearray
+           save-array
+           array-save)

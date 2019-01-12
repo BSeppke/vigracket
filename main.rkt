@@ -91,12 +91,18 @@
            matrix-mult
            
            ;vigracket.impex
-           loadimage 
+           loadimage
            load-image
            image-load
            saveimage
            save-image
            image-save
+           loadarray
+           load-array
+           array-load
+           savearray
+           save-array
+           array-save
            
            ;vigracket.splineimageview
            create-splineimageview-band
