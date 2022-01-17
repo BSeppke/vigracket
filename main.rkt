@@ -7,6 +7,7 @@
          vigracket/splineimageview
          vigracket/filters
          vigracket/tensors
+         vigracket/houghtransform
          vigracket/impex
          vigracket/imgproc
          vigracket/morphology
@@ -310,6 +311,10 @@
            closingimage
            upwindimage-band
            upwindimage
+
+           ;;vigracket.houghtransform
+           houghtransform-lines
+           houghtransform-circles
            
            ;vigracket.viewer
            showimage
