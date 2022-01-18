@@ -27,7 +27,8 @@
 
 (define vigra_houghtransform_get_lines_c
   (get-ffi-obj 'vigra_houghtransform_get_lines_c vigracket-dylib-path
-               (_fun (hough_lines img_vector width height) :: [hough_lines : _houghlines][img_vector : _cvector]
+               (_fun (hough_lines img_vector width height) :: [hough_lines : _houghlines]
+                     [img_vector : _cvector]
                      [width : _int]
                      [height : _int]
                      -> (res :  _int))))
@@ -68,7 +69,7 @@
                      [height : _int]
                      [min_radius : _int]
                      [max_radius : _int]
-                     [min_supporters : _int]
+                     [min_supporters : _float]
                      -> (res :  _houghcircles))))
 
 (define vigra_houghtransform_get_circle_count_c
@@ -78,7 +79,8 @@
 
 (define vigra_houghtransform_get_circles_c
   (get-ffi-obj 'vigra_houghtransform_get_circles_c vigracket-dylib-path
-               (_fun (hough_circles img_vector width height) :: [hough_circles : _houghcircles][img_vector : _cvector]
+               (_fun (hough_circles img_vector width height) :: [hough_circles : _houghcircles]
+                     [img_vector : _cvector]
                      [width : _int]
                      [height : _int]
                      -> (res :  _int))))
