@@ -13,7 +13,7 @@
   (cond ((equal? (system-type 'os) 'windows)
          (begin
            (display "=== Important notes for Windows ===")(newline)
-           (display "Please make sure to install the MS Visual C++ 2015 runtimes first!")(newline)
+           (display "Please make sure to install the MS Visual C++ 2017 runtimes first!")(newline)
            (display "You may get them from: https://www.microsoft.com/en-us/download/details.aspx?id=48145")(newline)))         
         ((equal? (system-type 'os) 'macosx)
          (begin
